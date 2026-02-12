@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Designs-Designer Davie</title>
+<link rel="icon" href="1ct3.jpg" type="image/x-icon">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Poppins',sans-serif;background:#f5f7fa;color:#333;}
+
+  header{
+    background:#2250b3;color:#fff;padding:2rem 1rem;text-align:center;font-size:2rem;font-weight:600;letter-spacing:1px;
+  }
+
+  .filter-bar{
+    display:flex;justify-content:center;gap:0.7rem;padding:1rem 0;flex-wrap:wrap;
+  }
+  .filter-btn{
+    padding:0.5rem 0.8rem;border:none;border-radius:8px;cursor:pointer;background:#3498db;color:#fff;transition:0.3s;font-size:0.9rem;
+  }
+  .filter-btn.active, .filter-btn:hover{background:#2980b9;}
+
+  .portfolio-container{
+    display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.5rem;
+    padding:2rem;max-width:1200px;margin:auto;
+  }
+
+  .design-card{
+    background:#fff;border-radius:15px;overflow:hidden;box-shadow:0 10px 20px rgba(0,0,0,0.08);
+    position:relative;transform:translateY(20px);opacity:0;transition:all 0.5s ease;
+  }
+  .design-card.show{transform:translateY(0);opacity:1;}
+  .design-card img{width:100%;display:block;height:220px;object-fit:cover;transition:transform 0.3s;}
+  .design-card:hover img{transform:scale(1.05);}
+
+  .design-info{padding:1rem;display:flex;flex-direction:column;gap:0.5rem;}
+  .design-buttons{display:flex;justify-content:space-between;gap:0.5rem;}
+  .design-buttons button{flex:1;padding:0.5rem 0;border:none;border-radius:8px;cursor:pointer;font-size:0.9rem;font-weight:500;transition:all 0.3s;}
+  .like-btn{background:#e74c3c;color:#fff;}
+  .comment-btn{background:#3498db;color:#fff;}
+  .share-btn{background:#f1c40f;color:#fff;}
+  .order-btn{background:#2ecc71;color:#fff;}
+  .like-count{font-size:0.85rem;color:#fff;margin-left:5px;font-weight:600;}
+  .design-name{display:none;}
+
+  /* Comment box & list */
+  .comment-box{display:none;position:relative;background:#f0f0f0;border-radius:12px;padding:0.5rem;margin-top:0.5rem;}
+  .comment-box input{width:100%;padding:0.4rem;border-radius:8px;border:1px solid #ccc;margin-bottom:0.4rem;}
+  .comment-box button{padding:0.3rem 0.6rem;border:none;background:#3498db;color:#fff;border-radius:8px;cursor:pointer;font-size:0.85rem;}
+  .comments-list{margin-top:0.5rem;max-height:150px;overflow-y:auto;font-size:0.85rem;color:#333;display:flex;flex-direction:column;gap:0.3rem;}
+  .comments-list div{background:#fff;padding:0.4rem 0.6rem;border-radius:6px;box-shadow:0 2px 4px rgba(0,0,0,0.05);display:flex;justify-content:space-between;align-items:center;}
+  .delete-comment{color:#e74c3c;cursor:pointer;font-weight:bold;margin-left:0.5rem;}
+  footer {
+    background: #2250b3;
+    color: #ccc;
+    padding: 20px;
+    text-align: center;
+    margin-top: 60px;
+}
+footer .footed small {
+    color: #ccc;
+    cursor: pointer;
+    margin: 0 8px;
+    text-decoration: none;
+}
+footer .footed small:hover {
+    color:white;
+    text-decoration: underline;
+}
+/* ===== IMAGE VIEWER (ADDED) ===== */
+#imageViewer{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.9);
+  display:none;
+  justify-content:center;
+  align-items:center;
+  z-index:9999;
+}
+#imageViewer img{
+  max-width:95%;
+  max-height:95%;
+  border-radius:12px;
+}
+#closeViewer{
+  position:absolute;
+  top:20px;right:25px;
+  font-size:2.2rem;
+  color:#fff;
+  cursor:pointer;
+}
+</style>
+</head>
+<body>
+
+<header>My Designs</header>
+
+<div class="filter-bar">
+  <button class="filter-btn active" data-type="all">All</button>
+  <button class="filter-btn" data-type="logo">Logo</button>
+  <button class="filter-btn" data-type="letterhead">Letterhead</button>
+  <button class="filter-btn" data-type="cover">Cover Art</button>
+  <button class="filter-btn" data-type="brochure">Brochures</button>
+  <button class="filter-btn" data-type="flyer">Flyers</button>
+  <button class="filter-btn" data-type="poster">Posters</button>
+  <button class="filter-btn" data-type="graphics">Other Graphics</button>
+</div>
+
+<div class="portfolio-container">
+
+  <!-- Example multiple cards for all types (you can duplicate more) -->
+  <div class="design-card" data-type="logo">
+    <img data-src="chat logo.jpg" alt="Logo Design">
+    <div class="design-info">
+      <div class="design-buttons">
+        <button class="like-btn">❤ <span class="like-count">0</span></button>
+        <button class="comment-btn">Comment</button>
+        <button class="share-btn">Share</button>
+        <button class="order-btn">Order</button>
+      </div>
+      <span class="design-name">Logo Design 1</span>
+      <div class="comment-box">
+        <input type="text" placeholder="Write a comment...">
+        <button>Send</button>
+      </div>
+      <div class="comments-list"></div>
+    </div>
+  </div>
+
+  <div class="design-card" data-type="letterhead">
+    <img data-src="lt2.jpg" alt="Letterhead Design">
+    <div class="design-info">
+      <div class="design-buttons">
+        <button class="like-btn">❤ <span class="like-count">0</span></button>
+        <button class="comment-btn">Comment</button>
+        <button class="share-btn">Share</button>
+        <button class="order-btn">Order</button>
+      </div>
+      <span class="design-name">Letterhead Design 1</span>
+      <div class="comment-box">
+        <input type="text" placeholder="Write a comment...">
+        <button>Send</button>
+      </div>
+      <div class="comments-list"></div>
+    </div>
+  </div>
+
+  <div class="design-card" data-type="cover">
+    <img data-src="cover.jpg" alt="Cover Art">
+    <div class="design-info">
+      <div class="design-buttons">
+        <button class="like-btn">❤ <span class="like-count">0</span></button>
+        <button class="comment-btn">Comment</button>
+        <button class="share-btn">Share</button>
+        <button class="order-btn">Order</button>
+      </div>
+      <span class="design-name">Cover Art 1</span>
+      <div class="comment-box">
+        <input type="text" placeholder="Write a comment...">
+        <button>Send</button>
+      </div>
+      <div class="comments-list"></div>
+    </div>
+  </div>
+
+  <div class="design-card" data-type="brochure">
+    <img data-src="bronchures.jpg" alt="Brochure Design">
+    <div class="design-info">
+      <div class="design-buttons">
+        <button class="like-btn">❤ <span class="like-count">0</span></button>
+        <button class="comment-btn">Comment</button>
+        <button class="share-btn">Share</button>
+        <button class="order-btn">Order</button>
+      </div>
+      <span class="design-name">Brochure 1</span>
+      <div class="comment-box">
+        <input type="text" placeholder="Write a comment...">
+        <button>Send</button>
+      </div>
+      <div class="comments-list"></div>
+    </div>
+  </div>
+
+  <div class="design-card" data-type="flyer">
+    <img data-src="flyer.jpg" alt="Flyer Design">
+    <div class="design-info">
+      <div class="design-buttons">
+        <button class="like-btn">❤ <span class="like-count">0</span></button>
+        <button class="comment-btn">Comment</button>
+        <button class="share-btn">Share</button>
+        <button class="order-btn">Order</button>
+      </div>
+      <span class="design-name">Flyer 1</span>
+      <div class="comment-box">
+        <input type="text" placeholder="Write a comment...">
+        <button>Send</button>
+      </div>
+      <div class="comments-list"></div>
+    </div>
+  </div>
+
+  <div class="design-card" data-type="poster">
+    <img data-src="canada grab.jpg" alt="Poster Design">
+    <div class="design-info">
+      <div class="design-buttons">
+        <button class="like-btn">❤ <span class="like-count">0</span></button>
+        <button class="comment-btn">Comment</button>
+        <button class="share-btn">Share</button>
+        <button class="order-btn">Order</button>
+      </div>
+      <span class="design-name">Poster 1</span>
+      <div class="comment-box">
+        <input type="text" placeholder="Write a comment...">
+        <button>Send</button>
+      </div>
+      <div class="comments-list"></div>
+    </div>
+  </div>
+
+  <div class="design-card" data-type="graphics">
+    <img data-src="camra.jpg" alt="Other Graphic Design">
+    <div class="design-info">
+      <div class="design-buttons">
+        <button class="like-btn">❤ <span class="like-count">0</span></button>
+        <button class="comment-btn">Comment</button>
+        <button class="share-btn">Share</button>
+        <button class="order-btn">Order</button>
+      </div>
+      <span class="design-name">Graphic Design 1</span>
+      <div class="comment-box">
+        <input type="text" placeholder="Write a comment...">
+        <button>Send</button>
+      </div>
+      <div class="comments-list"></div>
+    </div>
+  </div>
+
+   <div class="design-card" data-type="logo">
+    <img data-src="DAVIE LOGO.jpg" alt="Other Graphic Design">
+    <div class="design-info">
+      <div class="design-buttons">
+        <button class="like-btn">❤ <span class="like-count">0</span></button>
+        <button class="comment-btn">Comment</button>
+        <button class="share-btn">Share</button>
+        <button class="order-btn">Order</button>
+      </div>
+      <span class="design-name">Graphic Design 1</span>
+      <div class="comment-box">
+        <input type="text" placeholder="Write a comment...">
+        <button>Send</button>
+      </div>
+      <div class="comments-list"></div>
+    </div>
+  </div>
+
+   <div class="design-card" data-type="graphics">
+    <img data-src="JICTS2.jpg" alt="Other Graphic Design">
+    <div class="design-info">
+      <div class="design-buttons">
+        <button class="like-btn">❤ <span class="like-count">0</span></button>
+        <button class="comment-btn">Comment</button>
+        <button class="share-btn">Share</button>
+        <button class="order-btn">Order</button>
+      </div>
+      <span class="design-name">Graphic Design 1</span>
+      <div class="comment-box">
+        <input type="text" placeholder="Write a comment...">
+        <button>Send</button>
+      </div>
+      <div class="comments-list"></div>
+    </div>
+  </div>
+
+   <div class="design-card" data-type="graphics">
+    <img data-src="mockup design.jpg" alt="Other Graphic Design">
+    <div class="design-info">
+      <div class="design-buttons">
+        <button class="like-btn">❤ <span class="like-count">0</span></button>
+        <button class="comment-btn">Comment</button>
+        <button class="share-btn">Share</button>
+        <button class="order-btn">Order</button>
+      </div>
+      <span class="design-name">Graphic Design 1</span>
+      <div class="comment-box">
+        <input type="text" placeholder="Write a comment...">
+        <button>Send</button>
+      </div>
+      <div class="comments-list"></div>
+    </div>
+  </div>
+
+   <div class="design-card" data-type="graphics">
+    <img data-src="Nike poster.jpg" alt="Other Graphic Design">
+    <div class="design-info">
+      <div class="design-buttons">
+        <button class="like-btn">❤ <span class="like-count">0</span></button>
+        <button class="comment-btn">Comment</button>
+        <button class="share-btn">Share</button>
+        <button class="order-btn">Order</button>
+      </div>
+      <span class="design-name">Graphic Design 1</span>
+      <div class="comment-box">
+        <input type="text" placeholder="Write a comment...">
+        <button>Send</button>
+      </div>
+      <div class="comments-list"></div>
+    </div>
+  </div>
+
+   <div class="design-card" data-type="graphics">
+    <img data-src="TICKET.jpg" alt="Other Graphic Design">
+    <div class="design-info">
+      <div class="design-buttons">
+        <button class="like-btn">❤ <span class="like-count">0</span></button>
+        <button class="comment-btn">Comment</button>
+        <button class="share-btn">Share</button>
+        <button class="order-btn">Order</button>
+      </div>
+      <span class="design-name">Graphic Design 1</span>
+      <div class="comment-box">
+        <input type="text" placeholder="Write a comment...">
+        <button>Send</button>
+      </div>
+      <div class="comments-list"></div>
+    </div>
+  </div>
+
+  <div class="design-card" data-type="poster">
+    <img data-src="charity.jpg" alt="Other Graphic Design">
+    <div class="design-info">
+      <div class="design-buttons">
+        <button class="like-btn">❤ <span class="like-count">0</span></button>
+        <button class="comment-btn">Comment</button>
+        <button class="share-btn">Share</button>
+        <button class="order-btn">Order</button>
+      </div>
+      <span class="design-name">Graphic Design 1</span>
+      <div class="comment-box">
+        <input type="text" placeholder="Write a comment...">
+        <button>Send</button>
+      </div>
+      <div class="comments-list"></div>
+    </div>
+  </div>
+
+  <div class="design-card" data-type="brochure">
+    <img data-src="brochures2.jpg" alt="Other Graphic Design">
+    <div class="design-info">
+      <div class="design-buttons">
+        <button class="like-btn">❤ <span class="like-count">0</span></button>
+        <button class="comment-btn">Comment</button>
+        <button class="share-btn">Share</button>
+        <button class="order-btn">Order</button>
+      </div>
+      <span class="design-name">Graphic Design 1</span>
+      <div class="comment-box">
+        <input type="text" placeholder="Write a comment...">
+        <button>Send</button>
+      </div>
+      <div class="comments-list"></div>
+    </div>
+  </div>
+  <div class="design-card" data-type="flyer">
+    <img data-src="flyer2.jpg" alt="Other Graphic Design">
+    <div class="design-info">
+      <div class="design-buttons">
+        <button class="like-btn">❤ <span class="like-count">0</span></button>
+        <button class="comment-btn">Comment</button>
+        <button class="share-btn">Share</button>
+        <button class="order-btn">Order</button>
+      </div>
+      <span class="design-name">Graphic Design 1</span>
+      <div class="comment-box">
+        <input type="text" placeholder="Write a comment...">
+        <button>Send</button>
+      </div>
+      <div class="comments-list"></div>
+    </div>
+  </div>
+
+<div class="design-card" data-type="graphics">
+    <img data-src="Music dance.jpg" alt="Other Graphic Design">
+    <div class="design-info">
+      <div class="design-buttons">
+        <button class="like-btn">❤ <span class="like-count">0</span></button>
+        <button class="comment-btn">Comment</button>
+        <button class="share-btn">Share</button>
+        <button class="order-btn">Order</button>
+      </div>
+      <span class="design-name">Graphic Design 1</span>
+      <div class="comment-box">
+        <input type="text" placeholder="Write a comment...">
+        <button>Send</button>
+      </div>
+      <div class="comments-list"></div>
+    </div>
+  </div>
+
+<div class="design-card" data-type="letterhead">
+    <img data-src="lt3.jpg" alt="Other Graphic Design">
+    <div class="design-info">
+      <div class="design-buttons">
+        <button class="like-btn">❤ <span class="like-count">0</span></button>
+        <button class="comment-btn">Comment</button>
+        <button class="share-btn">Share</button>
+        <button class="order-btn">Order</button>
+      </div>
+      <span class="design-name">Graphic Design 1</span>
+      <div class="comment-box">
+        <input type="text" placeholder="Write a comment...">
+        <button>Send</button>
+      </div>
+      <div class="comments-list"></div>
+    </div>
+  </div>
+
+  <div class="design-card" data-type="cover">
+    <img data-src="cA1.jpg" alt="Other Graphic Design">
+    <div class="design-info">
+      <div class="design-buttons">
+        <button class="like-btn">❤ <span class="like-count">0</span></button>
+        <button class="comment-btn">Comment</button>
+        <button class="share-btn">Share</button>
+        <button class="order-btn">Order</button>
+      </div>
+      <span class="design-name">Graphic Design 1</span>
+      <div class="comment-box">
+        <input type="text" placeholder="Write a comment...">
+        <button>Send</button>
+      </div>
+      <div class="comments-list"></div>
+    </div>
+  </div>
+
+
+  <!-- You can duplicate these cards as much as needed -->
+</div>
+
+<footer>
+<p class="footed"><small><a href="front page.html">Home</a></small> |<small><a href="contacts.html">Contact</a></small>|<small> <a href="support.html">Support</a></small> |<small> <a href="policy.html">Policies</a></small> |<small> <a href="terms and conditions1.html">Terms & Conditions</a></small></p>
+<p>© 2026 | All Rights Reserved</p>
+</footer>
+<!-- IMAGE VIEWER -->
+<div id="imageViewer">
+  <span id="closeViewer">&times;</span>
+  <img id="viewerImage">
+</div>
+
+<!-- Firebase SDKs for plain HTML/JS -->
+<script src="https://www.gstatic.com/firebasejs/9.30.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.30.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.30.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.30.0/firebase-analytics-compat.js"></script>
+
+<script>
+  // Your Firebase Config
+  const firebaseConfig = {
+    apiKey: "AIzaSyBqSxgQCsUFgIz7eetzb2MMbO_DkHN2Zu8",
+    authDomain: "my-portifolio-3f4c5.firebaseapp.com",
+    projectId: "my-portifolio-3f4c5",
+    storageBucket: "my-portifolio-3f4c5.firebasestorage.app",
+    messagingSenderId: "1036053397124",
+    appId: "1:1036053397124:web:3bdfea641c319d176a0cd1",
+    measurementId: "G-MLBNWNV99Y"
+  };
+
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+  const analytics = firebase.analytics();
+</script>
+
+
+<script>
+  // Lazy load images
+  document.querySelectorAll('img[data-src]').forEach(img=>{
+    const observer = new IntersectionObserver(entries=>{
+      entries.forEach(entry=>{
+        if(entry.isIntersecting){
+          img.src=img.dataset.src;
+          observer.unobserve(img);
+        }
+      });
+    });
+    observer.observe(img);
+  });
+
+  // Scroll animation
+  document.querySelectorAll('.design-card').forEach(card=>{
+    const observer = new IntersectionObserver(entries=>{
+      entries.forEach(entry=>{ if(entry.isIntersecting) entry.target.classList.add('show'); });
+    },{threshold:0.1});
+    observer.observe(card);
+  });
+
+  // Filter
+  document.querySelectorAll('.filter-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      const type = btn.dataset.type;
+      document.querySelectorAll('.design-card').forEach(card=>{
+        card.style.display=(type==='all'||card.dataset.type===type)?'block':'none';
+      });
+    });
+  });
+
+  // Likes toggle per device
+  document.querySelectorAll('.like-btn').forEach(btn=>{
+    const card = btn.closest('.design-card');
+    const name = card.querySelector('.design-name').textContent;
+    let liked = JSON.parse(localStorage.getItem(name+'_liked'))||false;
+    let count = parseInt(localStorage.getItem(name+'_count')||'0');
+    btn.querySelector('.like-count').textContent=count;
+    if(liked) btn.style.backgroundColor='#c0392b';
+    btn.addEventListener('click', ()=>{
+      if(liked){count--; liked=false; btn.style.backgroundColor='#e74c3c';}
+      else{count++; liked=true; btn.style.backgroundColor='#c0392b';}
+      btn.querySelector('.like-count').textContent=count;
+      localStorage.setItem(name+'_liked',JSON.stringify(liked));
+      localStorage.setItem(name+'_count',count);
+    });
+  });
+
+  // Comments toggle & outside click hide
+  document.addEventListener('click', e=>{
+    document.querySelectorAll('.comment-box').forEach(box=>{
+      if(!box.contains(e.target) && !box.closest('.design-card').querySelector('.comment-btn').contains(e.target)){
+        box.style.display='none';
+      }
+    });
+  });
+
+  // Comment functionality with delete
+  document.querySelectorAll('.design-card').forEach(card=>{
+    const name = card.querySelector('.design-name').textContent;
+    const commentBtn = card.querySelector('.comment-btn');
+    const commentBox = card.querySelector('.comment-box');
+    const input = commentBox.querySelector('input');
+    const sendBtn = commentBox.querySelector('button');
+    const commentsList = card.querySelector('.comments-list');
+
+    // Load previous comments
+    let savedComments = JSON.parse(localStorage.getItem(name+'_comments')||'[]');
+    savedComments.forEach(c=>{
+      const div = document.createElement('div'); div.textContent=c;
+      const del = document.createElement('span'); del.textContent='×'; del.className='delete-comment';
+      div.appendChild(del); commentsList.appendChild(div);
+    });
+
+    // Toggle box
+    commentBtn.addEventListener('click', ()=>{ commentBox.style.display=commentBox.style.display==='block'?'none':'block'; });
+
+    // Send comment
+    sendBtn.addEventListener('click', ()=>{
+      if(input.value.trim()!==''){
+        const val = input.value.trim();
+        savedComments.push(val);
+        localStorage.setItem(name+'_comments',JSON.stringify(savedComments));
+        input.value='';
+        commentBox.style.display='none';
+        const div = document.createElement('div'); div.textContent=val;
+        const del = document.createElement('span'); del.textContent='×'; del.className='delete-comment';
+        div.appendChild(del); commentsList.appendChild(div);
+      }
+    });
+
+    // Delete comment
+    commentsList.addEventListener('click', e=>{
+      if(e.target.classList.contains('delete-comment')){
+        const idx = Array.from(commentsList.children).indexOf(e.target.parentElement);
+        savedComments.splice(idx,1);
+        localStorage.setItem(name+'_comments',JSON.stringify(savedComments));
+        e.target.parentElement.remove();
+      }
+    });
+  });
+
+  // Share button
+  document.querySelectorAll('.share-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const card = btn.closest('.design-card');
+      const title = card.querySelector('.design-name').textContent;
+      const url = window.location.href;
+      if(navigator.share){navigator.share({title,url}).catch(err=>console.log(err));}
+      else{alert('Sharing not supported on this device');}
+    });
+  });
+
+  // Order button does nothing
+  // ORDER BUTTON → OPEN ORDER PAGE WITH DESIGN NAME
+document.querySelectorAll('.order-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    const card = btn.closest('.design-card');
+    const designName = card.querySelector('.design-name').textContent.trim();
+
+    // Open order page in new tab
+    const url = "Orderp.html?design=" + encodeURIComponent(designName);
+    window.open(url, "_blank");
+  });
+});
+
+  /* ===== IMAGE VIEWER SCRIPT (ADDED) ===== */
+const viewer=document.getElementById('imageViewer');
+const vImg=document.getElementById('viewerImage');
+document.querySelectorAll('.design-card img').forEach(img=>{
+  img.onclick=()=>{
+    vImg.src=img.src;
+    viewer.style.display='flex';
+    document.body.style.overflow='hidden';
+  };
+});
+document.getElementById('closeViewer').onclick=close;
+viewer.onclick=e=>{if(e.target===viewer)close();}
+document.onkeydown=e=>{if(e.key==='Escape')close();}
+function close(){
+  viewer.style.display='none';
+  document.body.style.overflow='auto';
+}
+</script>
+
+</body>
+</html>

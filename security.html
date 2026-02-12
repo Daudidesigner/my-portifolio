@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Password</title>
+        <meta charset="UTF-8">
+        <link rel="icon" href="1ct3.jpg" type="image/x-icon">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <style>
+        body{
+            text-align: center;
+            justify-items: center;
+            padding: 50px;
+            font-family:Arial, Helvetica, sans-serif;
+            background-image: url('backc4.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: top;
+        }
+        form{
+            background-color: #ccc;
+            padding: 70px;
+            border-radius:50px;
+        }
+        #pin{
+            border:none;
+            padding:10px;
+            border-radius:10px;
+        }
+        #pinc{
+            border:none;
+            padding:10px;
+            border-radius:10px;
+        }
+        #submit{
+            border:none;
+            padding:5px;
+            border-radius: 10px;
+            color: white;
+            background-color: gray;
+            cursor: not-allowed;
+            transition: background-color 0.3s;
+        }
+        #submit.active:hover{
+            background-color: rgb(102, 102, 180);
+            color:red;
+        }
+        #submit.active{
+            background-color: blue;
+            cursor: pointer;
+        }
+        #accept{
+            cursor: pointer;
+        }
+        #msg, #conmsg{
+            font-size: x-small;
+        }
+    </style>
+    <body>
+        <form action="form222.html" id="security-form">
+            
+            <label for="pin">Enter Your Password</label><br><br>
+            <input type="password" id="pin" name="pin" minlength="8" maxlength="32" required>
+            <p id="msg"></p><br>
+            <label for="pinc">Confirm Your Password</label><br><br>
+            <input type="password" id="pinc" name="pinc" required>
+            <p id="conmsg"></p><br><br>
+            <input type="checkbox" id="accept" name="accept" required>
+            <label for="accept">I Accept terms and Conditions</label><br>
+            <a href="terms and conditions.html">Terms and Conditions</a> <br><br>
+            <input type="submit" id="submit" value="Register"disabled>
+        </form>
+
+<!-- Firebase SDKs for plain HTML/JS -->
+<script src="https://www.gstatic.com/firebasejs/9.30.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.30.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.30.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.30.0/firebase-analytics-compat.js"></script>
+
+<script>
+  // Your Firebase Config
+  const firebaseConfig = {
+    apiKey: "AIzaSyBqSxgQCsUFgIz7eetzb2MMbO_DkHN2Zu8",
+    authDomain: "my-portifolio-3f4c5.firebaseapp.com",
+    projectId: "my-portifolio-3f4c5",
+    storageBucket: "my-portifolio-3f4c5.firebasestorage.app",
+    messagingSenderId: "1036053397124",
+    appId: "1:1036053397124:web:3bdfea641c319d176a0cd1",
+    measurementId: "G-MLBNWNV99Y"
+  };
+
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+  const analytics = firebase.analytics();
+</script>
+
+<script>
+    const securityForm = document.getElementById("security-form");
+
+securityForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  // Get password from form
+  const password = pin.value;
+
+  // Get personal info from localStorage (saved in sign-up page)
+  const signupData = JSON.parse(localStorage.getItem("signupData"));
+  if (!signupData) {
+    alert("No sign-up info found. Please start from Sign-up page.");
+    window.location = "sign_up.html";
+    return;
+  }
+
+  const email = signupData.email;
+
+  // Create Firebase Auth account
+  auth.createUserWithEmailAndPassword(email, password)
+    .then((cred) => {
+      // Save all user info in Firestore
+      return db.collection("users").doc(cred.user.uid).set({
+        ...signupData,
+        createdAt: firebase.firestore.Timestamp.now()
+      });
+    })
+    .then(() => {
+      alert("Account created successfully!");
+      localStorage.removeItem("signupData"); // clean up
+      window.location = "Login1.html"; // redirect to login page
+    })
+    .catch((err) => alert(err.message));
+});
+
+</script>
+
+        <script>
+            document.getElementById("pin").addEventListener("input",function(){
+                const password=this.value;
+                const pattern=/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,32}$/;
+                if (pattern.test(password)){
+                    document.getElementById("msg").innerHTML="Strong password";
+                    document.getElementById("msg").style.color="green";
+                } else {
+                    document.getElementById("msg").innerHTML=
+                    "password must contain special characters, number,upper case, lower case, and must be 8 to 32 characters";
+                    document.getElementById("msg").style.color="red";
+                }
+            });
+            const password=document.getElementById("pin");
+            const confpass=document.getElementById("pinc");
+            const confmsg=document.getElementById("conmsg");
+            confpass.addEventListener("input", function(){
+            if(confpass.value==""){
+                confmsg.textContent="";
+            } else if (confpass.value==password.value){
+                confmsg.textContent="Password Match";
+                confmsg.style.color="green";
+            } else{
+                confmsg.textContent="Password do not match";
+                confmsg.style.color="red";
+            }
+            });
+            const accept=document.getElementById("accept");
+            const submit=document.getElementById("submit");
+            accept.addEventListener("change", function(){
+                if(this.checked){
+                    submit.disabled=false;
+                    submit.classList.add("active");
+                } else {
+                    submit.disabled=true;
+                    submit.classList.remove("active");
+                }
+            });
+        </script>
+    </body>
+</html>
