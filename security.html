@@ -57,7 +57,7 @@
         }
     </style>
     <body>
-        <form id="security-form">
+        <form action="Login1.html" id="security-form">
             
             <label for="pin">Enter Your Password</label><br><br>
             <input type="password" id="pin" name="pin" minlength="8" maxlength="32" required>
@@ -109,7 +109,7 @@ securityForm.addEventListener("submit", async (e) => {
   const signupData = JSON.parse(localStorage.getItem("signupData"));
   if (!signupData) {
     alert("No sign-up info found. Please start from Sign-up page.");
-    window.location = "sign_up.html";
+    window.location = "sign up page.html";
     return;
   }
 
@@ -135,44 +135,43 @@ securityForm.addEventListener("submit", async (e) => {
 </script>
 
         <script>
-          document.getElementById("pin").addEventListener("input",function(){
-                const password=this.value;
-                const pattern=/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,32}$/;
-                if (pattern.test(password)){
-                    document.getElementById("msg").innerHTML="Strong password";
-                    document.getElementById("msg").style.color="green";
-                } else {
-                    document.getElementById("msg").innerHTML=
-                    "password must contain special characters, number,upper case, lower case, and must be 8 to 32 characters";
-                    document.getElementById("msg").style.color="red";
-                }
-            });
-            const password=document.getElementById("pin");
-            const confpass=document.getElementById("pinc");
-            const confmsg=document.getElementById("conmsg");
-            confpass.addEventListener("input", function(){
-            if(confpass.value==""){
-                confmsg.textContent="";
-            } else if (confpass.value==password.value){
-                confmsg.textContent="Password Match";
-                confmsg.style.color="green";
-            } else{
-                confmsg.textContent="Password do not match";
-                confmsg.style.color="red";
-            }
-            });
-            const accept=document.getElementById("accept");
-            const submit=document.getElementById("submit");
-            accept.addEventListener("change", function(){
-                if(this.checked){
-                    submit.disabled=false;
-                    submit.classList.add("active");
-                } else {
-                    submit.disabled=true;
-                    submit.classList.remove("active");
-                }
-            });
+            document.getElementById("pin").addEventListener("input",function(){
+                const password=this.value;
+                const pattern=/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,32}$/;
+                if (pattern.test(password)){
+                    document.getElementById("msg").innerHTML="Strong password";
+                    document.getElementById("msg").style.color="green";
+                } else {
+                    document.getElementById("msg").innerHTML=
+                    "password must contain special characters, number,upper case, lower case, and must be 8 to 32 characters";
+                    document.getElementById("msg").style.color="red";
+                }
+            });
+            const password=document.getElementById("pin");
+            const confpass=document.getElementById("pinc");
+            const confmsg=document.getElementById("conmsg");
+            confpass.addEventListener("input", function(){
+            if(confpass.value==""){
+                confmsg.textContent="";
+            } else if (confpass.value==password.value){
+                confmsg.textContent="Password Match";
+                confmsg.style.color="green";
+            } else{
+                confmsg.textContent="Password do not match";
+                confmsg.style.color="red";
+            }
+            });
+            const accept=document.getElementById("accept");
+            const submit=document.getElementById("submit");
+            accept.addEventListener("change", function(){
+                if(this.checked){
+                    submit.disabled=false;
+                    submit.classList.add("active");
+                } else {
+                    submit.disabled=true;
+                    submit.classList.remove("active");
+                }
+            });
         </script>
     </body>
-
 </html>
