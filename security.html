@@ -57,7 +57,7 @@
         }
     </style>
     <body>
-        <form action="Login1.html" id="security-form">
+        <form id="security-form">
             
             <label for="pin">Enter Your Password</label><br><br>
             <input type="password" id="pin" name="pin" minlength="8" maxlength="32" required>
@@ -103,7 +103,7 @@ securityForm.addEventListener("submit", async (e) => {
   e.preventDefault();
 
   // Get password from form
-  const password = pin.value;
+  const password = document.getElementById("pin").value;
 
   // Get personal info from localStorage (saved in sign-up page)
   const signupData = JSON.parse(localStorage.getItem("signupData"));
@@ -175,3 +175,4 @@ securityForm.addEventListener("submit", async (e) => {
         </script>
     </body>
 </html>
+
