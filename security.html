@@ -71,16 +71,24 @@
             <input type="submit" id="submit" value="Register"disabled>
         </form>
 
-<!-- Firebase SDKs – keep these in order -->
+<!-- Firebase SDKs – Weka hizi kabla ya script yako (order muhimu) -->
 <script src="https://www.gstatic.com/firebasejs/9.30.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.30.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.30.0/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.30.0/firebase-analytics-compat.js"></script>
 
+<!-- Sasa script yako – WRAP everything inside window 'load' -->
 <script>
-  // Wait until Firebase is actually ready
   window.addEventListener('load', function() {
-    // Your config
+    // Check kama firebase imepakia
+    if (typeof firebase === 'undefined' || !firebase.initializeApp) {
+      console.error("Firebase SDK haijaload – check internet au refresh page.");
+      alert("Tatizo la muunganisho na Firebase. Jaribu refresh au angalia console.");
+      return;
+    }
+
+    console.log("Firebase SDK loaded successfully!");
+
     const firebaseConfig = {
       apiKey: "AIzaSyBqSxgQCsUFgIz7eetzb2MMbO_DkHN2Zu8",
       authDomain: "my-portifolio-3f4c5.firebaseapp.com",
@@ -91,46 +99,54 @@
       measurementId: "G-MLBNWNV99Y"
     };
 
-    // Initialize only once
     firebase.initializeApp(firebaseConfig);
-
-    // Now define auth & db safely
     const auth = firebase.auth();
     const db = firebase.firestore();
-    // const analytics = firebase.analytics(); // optional
 
-    // Attach form listener ONLY after everything is ready
+    console.log("Firebase initialized – auth & db ready");
+
+    // Sasa form listener
     const securityForm = document.getElementById("security-form");
     securityForm.addEventListener("submit", async (e) => {
       e.preventDefault();
 
-      const password = document.getElementById("pin").value;
+      const password = document.getElementById("pin").value.trim();
       const signupData = JSON.parse(localStorage.getItem("signupData"));
 
-      if (!signupData) {
-        alert("No sign-up info found. Please start from Sign-up page.");
-        window.location = "sign up page.html";
+      if (!signupData || !signupData.email) {
+        alert("Rud ia sign-up page kwanza.");
+        window.location.href = "sign up page.html";
         return;
       }
 
-      const email = signupData.email;
+      const email = signupData.email.trim();
 
       try {
+        console.log("Creating user...");
         const cred = await auth.createUserWithEmailAndPassword(email, password);
         console.log("User created:", cred.user.uid);
 
+        console.log("Saving to Firestore...");
         await db.collection("users").doc(cred.user.uid).set({
           ...signupData,
           createdAt: firebase.firestore.Timestamp.now()
         });
-        console.log("Data saved to Firestore");
+        console.log("Data saved!");
 
-        alert("Account created successfully!");
+        alert("Akaunti imeundwa vizuri!");
         localStorage.removeItem("signupData");
-        window.location.href = "Login1.html";  // This should now work
+
+        console.log("Redirecting...");
+        window.location.href = "Login1.html";  // Jaribu hii kwanza
+
+        // Fallback kama haifanyi kazi
+        setTimeout(() => {
+          window.location.replace("Login1.html");
+        }, 1000);
+
       } catch (err) {
-        console.error("Error:", err);
-        alert(err.message || "Something went wrong – check console");
+        console.error("Error:", err.code, err.message);
+        alert("Tatizo: " + err.message);
       }
     });
   });
@@ -179,6 +195,7 @@
         </script>
     </body>
 </html>
+
 
 
 
