@@ -127,7 +127,7 @@ securityForm.addEventListener("submit", async (e) => {
     .then(() => {
       alert("Account created successfully!");
       localStorage.removeItem("signupData"); // clean up
-      window.location = "Login1.html"; // redirect to login page
+      window.location.href = "Login1.html"; // redirect to login page
     })
     .catch((err) => alert(err.message));
 });
@@ -175,4 +175,5 @@ securityForm.addEventListener("submit", async (e) => {
         </script>
     </body>
 </html>
+
 
