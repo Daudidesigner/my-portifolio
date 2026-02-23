@@ -71,68 +71,70 @@
             <input type="submit" id="submit" value="Register"disabled>
         </form>
 
-<!-- Firebase SDKs for plain HTML/JS -->
+<!-- Firebase SDKs – keep these in order -->
 <script src="https://www.gstatic.com/firebasejs/9.30.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.30.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.30.0/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.30.0/firebase-analytics-compat.js"></script>
 
 <script>
-  // Your Firebase Config
-  const firebaseConfig = {
-    apiKey: "AIzaSyBqSxgQCsUFgIz7eetzb2MMbO_DkHN2Zu8",
-    authDomain: "my-portifolio-3f4c5.firebaseapp.com",
-    projectId: "my-portifolio-3f4c5",
-    storageBucket: "my-portifolio-3f4c5.firebasestorage.app",
-    messagingSenderId: "1036053397124",
-    appId: "1:1036053397124:web:3bdfea641c319d176a0cd1",
-    measurementId: "G-MLBNWNV99Y"
-  };
+  // Wait until Firebase is actually ready
+  window.addEventListener('load', function() {
+    // Your config
+    const firebaseConfig = {
+      apiKey: "AIzaSyBqSxgQCsUFgIz7eetzb2MMbO_DkHN2Zu8",
+      authDomain: "my-portifolio-3f4c5.firebaseapp.com",
+      projectId: "my-portifolio-3f4c5",
+      storageBucket: "my-portifolio-3f4c5.firebasestorage.app",
+      messagingSenderId: "1036053397124",
+      appId: "1:1036053397124:web:3bdfea641c319d176a0cd1",
+      measurementId: "G-MLBNWNV99Y"
+    };
 
-  // Initialize Firebase
-  firebase.initializeApp(firebaseConfig);
-  const auth = firebase.auth();
-  const db = firebase.firestore();
-  const analytics = firebase.analytics();
-</script>
+    // Initialize only once
+    firebase.initializeApp(firebaseConfig);
 
-<script>
+    // Now define auth & db safely
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+    // const analytics = firebase.analytics(); // optional
+
+    // Attach form listener ONLY after everything is ready
     const securityForm = document.getElementById("security-form");
+    securityForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
 
-securityForm.addEventListener("submit", async (e) => {
-  e.preventDefault();
-  const password = document.getElementById("pin").value;
-  const signupData = JSON.parse(localStorage.getItem("signupData"));
-  
-  if (!signupData) {
-    alert("No sign-up info found. Please start from Sign-up page.");
-    window.location = "sign up page.html";
-    return;
-  }
-  
-  const email = signupData.email;
-  
-  console.log("Starting signup with email:", email);
-  
-  try {
-    const cred = await auth.createUserWithEmailAndPassword(email, password);
-    console.log("Auth user created:", cred.user.uid);
-    
-    await db.collection("users").doc(cred.user.uid).set({
-      ...signupData,
-      createdAt: firebase.firestore.Timestamp.now()
+      const password = document.getElementById("pin").value;
+      const signupData = JSON.parse(localStorage.getItem("signupData"));
+
+      if (!signupData) {
+        alert("No sign-up info found. Please start from Sign-up page.");
+        window.location = "sign up page.html";
+        return;
+      }
+
+      const email = signupData.email;
+
+      try {
+        const cred = await auth.createUserWithEmailAndPassword(email, password);
+        console.log("User created:", cred.user.uid);
+
+        await db.collection("users").doc(cred.user.uid).set({
+          ...signupData,
+          createdAt: firebase.firestore.Timestamp.now()
+        });
+        console.log("Data saved to Firestore");
+
+        alert("Account created successfully!");
+        localStorage.removeItem("signupData");
+        window.location.href = "Login1.html";  // This should now work
+      } catch (err) {
+        console.error("Error:", err);
+        alert(err.message || "Something went wrong – check console");
+      }
     });
-    console.log("Firestore document saved successfully");
-    
-    alert("Account created successfully!");
-    localStorage.removeItem("signupData");
-    console.log("Redirecting to Login1.html");
-    window.location.href = "Login1.html";  // also try window.location.replace("Login1.html") if needed
-  } catch (err) {
-    console.error("Signup failed:", err.code, err.message);
-    alert(err.message);
-  }
-});
+  });
+</script>
 
 </script>
 
@@ -177,6 +179,7 @@ securityForm.addEventListener("submit", async (e) => {
         </script>
     </body>
 </html>
+
 
 
 
