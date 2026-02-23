@@ -101,35 +101,37 @@
 
 securityForm.addEventListener("submit", async (e) => {
   e.preventDefault();
-
-  // Get password from form
   const password = document.getElementById("pin").value;
-
-  // Get personal info from localStorage (saved in sign-up page)
   const signupData = JSON.parse(localStorage.getItem("signupData"));
+  
   if (!signupData) {
     alert("No sign-up info found. Please start from Sign-up page.");
     window.location = "sign up page.html";
     return;
   }
-
+  
   const email = signupData.email;
-
-  // Create Firebase Auth account
-  auth.createUserWithEmailAndPassword(email, password)
-    .then((cred) => {
-      // Save all user info in Firestore
-      return db.collection("users").doc(cred.user.uid).set({
-        ...signupData,
-        createdAt: firebase.firestore.Timestamp.now()
-      });
-    })
-    .then(() => {
-      alert("Account created successfully!");
-      localStorage.removeItem("signupData"); // clean up
-      window.location.href = "Login1.html"; // redirect to login page
-    })
-    .catch((err) => alert(err.message));
+  
+  console.log("Starting signup with email:", email);
+  
+  try {
+    const cred = await auth.createUserWithEmailAndPassword(email, password);
+    console.log("Auth user created:", cred.user.uid);
+    
+    await db.collection("users").doc(cred.user.uid).set({
+      ...signupData,
+      createdAt: firebase.firestore.Timestamp.now()
+    });
+    console.log("Firestore document saved successfully");
+    
+    alert("Account created successfully!");
+    localStorage.removeItem("signupData");
+    console.log("Redirecting to Login1.html");
+    window.location.href = "Login1.html";  // also try window.location.replace("Login1.html") if needed
+  } catch (err) {
+    console.error("Signup failed:", err.code, err.message);
+    alert(err.message);
+  }
 });
 
 </script>
@@ -175,5 +177,6 @@ securityForm.addEventListener("submit", async (e) => {
         </script>
     </body>
 </html>
+
 
 
