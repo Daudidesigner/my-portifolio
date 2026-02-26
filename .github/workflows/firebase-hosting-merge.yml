@@ -17,3 +17,4 @@ jobs:
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_MY_PORTIFOLIO_3F4C5 }}
           channelId: live
           projectId: my-portifolio-3f4c5
+          entryPoint: .
