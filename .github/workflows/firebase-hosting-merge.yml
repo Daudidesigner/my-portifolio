@@ -18,5 +18,9 @@ jobs:
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
         run: |
-          npm install -g firebase-tools
+          npm install -g firebase-tools@latest   # Force latest version
+          firebase --version                     # Show CLI version
+          ls -la                                 # List files to confirm firebase.json exists
+          cat firebase.json || echo "firebase.json not found or empty"  # Show content or error
+          firebase use --add my-portfolio-3f4c5 || true  # Link project (safe, ignores if already linked)
           firebase deploy --only hosting --token "$FIREBASE_TOKEN" --project my-portfolio-3f4c5 --debug
