@@ -71,41 +71,57 @@
             <input type="submit" id="submit" value="Register"disabled>
         </form>
 
-<!-- Firebase SDKs – Weka hizi kabla ya script yako (order muhimu) -->
-<script src="https://www.gstatic.com/firebasejs/9.30.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.30.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.30.0/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.30.0/firebase-analytics-compat.js"></script>
+<script type="module">
+  // Firebase Modular SDK v10+
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+  import { 
+    getAuth, 
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword,
+    updateProfile,
+    onAuthStateChanged
+  } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+  import { 
+    getFirestore, 
+    doc, 
+    setDoc,
+    getDocs,
+    collection,
+    query,
+    where
+  } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 
-<!-- Sasa script yako – WRAP everything inside window 'load' -->
-<script>
-  window.addEventListener('load', function() {
-    // Check kama firebase imepakia
-    if (typeof firebase === 'undefined' || !firebase.initializeApp) {
-      console.error("Firebase SDK haijaload – check internet au refresh page.");
-      alert("Tatizo la muunganisho na Firebase. Jaribu refresh au angalia console.");
-      return;
-    }
+  const firebaseConfig = {
+    apiKey: "AIzaSyBqSxgQCsUFgIz7eetzb2MMbO_DkHN2Zu8",
+    authDomain: "my-portifolio-3f4c5.firebaseapp.com",
+    projectId: "my-portifolio-3f4c5",
+    storageBucket: "my-portifolio-3f4c5.firebasestorage.app",
+    messagingSenderId: "1036053397124",
+    appId: "1:1036053397124:web:3bdfea641c319d176a0cd1",
+    measurementId: "G-MLBNWNV99Y"
+  };
 
-    console.log("Firebase SDK loaded successfully!");
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyBqSxgQCsUFgIz7eetzb2MMbO_DkHN2Zu8",
-      authDomain: "my-portifolio-3f4c5.firebaseapp.com",
-      projectId: "my-portifolio-3f4c5",
-      storageBucket: "my-portifolio-3f4c5.firebasestorage.app",
-      messagingSenderId: "1036053397124",
-      appId: "1:1036053397124:web:3bdfea641c319d176a0cd1",
-      measurementId: "G-MLBNWNV99Y"
-    };
-
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.firestore();
-
-    console.log("Firebase initialized – auth & db ready");
+  // Fanya global ili script zako zingine ziweze kutumia
+  window.auth = auth;
+  window.db = db;
+  window.createUserWithEmailAndPassword = createUserWithEmailAndPassword;
+  window.signInWithEmailAndPassword = signInWithEmailAndPassword;
+  window.updateProfile = updateProfile;
+  window.onAuthStateChanged = onAuthStateChanged;
+  window.doc = doc;
+  window.setDoc = setDoc;
+  window.getDocs = getDocs;
+  window.collection = collection;
+  window.query = query;
+  window.where = where;
+</script>
 
     // Sasa form listener
+      <script>
     const securityForm = document.getElementById("security-form");
     securityForm.addEventListener("submit", async (e) => {
       e.preventDefault();
@@ -195,6 +211,7 @@
         </script>
     </body>
 </html>
+
 
 
 
