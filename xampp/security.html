@@ -57,7 +57,7 @@
         }
     </style>
     <body>
-        <form action="Login1.html" id="security-form">
+        <form id="security-form">
             
             <label for="pin">Enter Your Password</label><br><br>
             <input type="password" id="pin" name="pin" minlength="8" maxlength="32" required>
@@ -68,17 +68,30 @@
             <input type="checkbox" id="accept" name="accept" required>
             <label for="accept">I Accept terms and Conditions</label><br>
             <a href="terms and conditions.html">Terms and Conditions</a> <br><br>
+            <p id="error" style="color:red; min-height:20px;"></p><br><br>
             <input type="submit" id="submit" value="Register"disabled>
         </form>
 
-<!-- Firebase SDKs for plain HTML/JS -->
-<script src="https://www.gstatic.com/firebasejs/9.30.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.30.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.30.0/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.30.0/firebase-analytics-compat.js"></script>
+<script type="module">
+  // Firebase Modular SDK v10+
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+  import { 
+    getAuth, 
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword,
+    updateProfile,
+    onAuthStateChanged
+  } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+  import { 
+    getFirestore, 
+    doc, 
+    setDoc,
+    getDocs,
+    collection,
+    query,
+    where
+  } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 
-<script>
-  // Your Firebase Config
   const firebaseConfig = {
     apiKey: "AIzaSyBqSxgQCsUFgIz7eetzb2MMbO_DkHN2Zu8",
     authDomain: "my-portifolio-3f4c5.firebaseapp.com",
@@ -89,49 +102,77 @@
     measurementId: "G-MLBNWNV99Y"
   };
 
-  // Initialize Firebase
-  firebase.initializeApp(firebaseConfig);
-  const auth = firebase.auth();
-  const db = firebase.firestore();
-  const analytics = firebase.analytics();
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  // Fanya global ili script zako zingine ziweze kutumia
+  window.auth = auth;
+  window.db = db;
+  window.createUserWithEmailAndPassword = createUserWithEmailAndPassword;
+  window.signInWithEmailAndPassword = signInWithEmailAndPassword;
+  window.updateProfile = updateProfile;
+  window.onAuthStateChanged = onAuthStateChanged;
+  window.doc = doc;
+  window.setDoc = setDoc;
+  window.getDocs = getDocs;
+  window.collection = collection;
+  window.query = query;
+  window.where = where;
 </script>
 
-<script>
-    const securityForm = document.getElementById("security-form");
+    // Sasa form listener
+    <script>
+  const securityForm = document.getElementById("security-form");
+  const errorEl = document.createElement("p");
+  errorEl.style.color = "red";
+  errorEl.style.fontSize = "small";
+  securityForm.appendChild(errorEl);
 
-securityForm.addEventListener("submit", async (e) => {
-  e.preventDefault();
+  securityForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
 
-  // Get password from form
-  const password = pin.value;
+    const password = document.getElementById("pin").value.trim();
+    const storedData = JSON.parse(localStorage.getItem("signupData"));
 
-  // Get personal info from localStorage (saved in sign-up page)
-  const signupData = JSON.parse(localStorage.getItem("signupData"));
-  if (!signupData) {
-    alert("No sign-up info found. Please start from Sign-up page.");
-    window.location = "sign up page.html";
-    return;
-  }
+    if (!storedData || !storedData.email) {
+      errorEl.textContent = "Session is expired. Try again letter.";
+      return;
+    }
 
-  const email = signupData.email;
+    const email = storedData.email.trim();
 
-  // Create Firebase Auth account
-  auth.createUserWithEmailAndPassword(email, password)
-    .then((cred) => {
-      // Save all user info in Firestore
-      return db.collection("users").doc(cred.user.uid).set({
-        ...signupData,
-        createdAt: firebase.firestore.Timestamp.now()
+    try {
+      // 1. Unda user kwa Firebase Auth
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      // 2. Update display name (optional)
+      await updateProfile(user, {
+        displayName: `${storedData.fname || ''} ${storedData.lname || ''}`.trim()
       });
-    })
-    .then(() => {
-      alert("Account created successfully!");
-      localStorage.removeItem("signupData"); // clean up
-      window.location = "Login1.html"; // redirect to login page
-    })
-    .catch((err) => alert(err.message));
-});
 
+      // 3. Hifadhi data zote kwenye Firestore
+      await setDoc(doc(db, "users", user.uid), {
+        ...storedData,
+        uid: user.uid,
+        createdAt: new Date().toISOString()
+      });
+
+      // Success
+      localStorage.removeItem("signupData");
+      alert("Your account is created Successfully.");
+      window.location.replace("Login1.html");
+
+    } catch (err) {
+      console.error("Signup error:", err);
+      let msg = "Error: " + err.message;
+      if (err.code === 'auth/weak-password') msg = "Weak password";
+      if (err.code === 'auth/email-already-in-use') msg = "Email is already used";
+      if (err.code === 'auth/invalid-email') msg = "Email is not correct";
+      errorEl.textContent = msg;
+    }
+  });
 </script>
 
         <script>
@@ -175,3 +216,9 @@ securityForm.addEventListener("submit", async (e) => {
         </script>
     </body>
 </html>
+
+
+
+
+
+
