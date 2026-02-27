@@ -124,13 +124,26 @@
         </form>
 
 <!-- Firebase SDKs for plain HTML/JS -->
-<script src="https://www.gstatic.com/firebasejs/9.30.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.30.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.30.0/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.30.0/firebase-analytics-compat.js"></script>
+<script type="module">
+  // Firebase Modular SDK v10+
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+  import { 
+    getAuth, 
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword,
+    updateProfile,
+    onAuthStateChanged
+  } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+  import { 
+    getFirestore, 
+    doc, 
+    setDoc,
+    getDocs,
+    collection,
+    query,
+    where
+  } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 
-<script>
-  // Your Firebase Config
   const firebaseConfig = {
     apiKey: "AIzaSyBqSxgQCsUFgIz7eetzb2MMbO_DkHN2Zu8",
     authDomain: "my-portifolio-3f4c5.firebaseapp.com",
@@ -141,11 +154,23 @@
     measurementId: "G-MLBNWNV99Y"
   };
 
-  // Initialize Firebase
-  firebase.initializeApp(firebaseConfig);
-  const auth = firebase.auth();
-  const db = firebase.firestore();
-  const analytics = firebase.analytics();
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  // Fanya global ili script zako zingine ziweze kutumia
+  window.auth = auth;
+  window.db = db;
+  window.createUserWithEmailAndPassword = createUserWithEmailAndPassword;
+  window.signInWithEmailAndPassword = signInWithEmailAndPassword;
+  window.updateProfile = updateProfile;
+  window.onAuthStateChanged = onAuthStateChanged;
+  window.doc = doc;
+  window.setDoc = setDoc;
+  window.getDocs = getDocs;
+  window.collection = collection;
+  window.query = query;
+  window.where = where;
 </script>
 
 <script>
@@ -193,4 +218,5 @@ signupForm.addEventListener('submit', async (e) => {
             });
         </script>
     </body>
+
 </html>
