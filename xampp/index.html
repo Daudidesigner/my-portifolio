@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Graphics Designing Services</title>
+<link rel="icon" href="1ct3.jpg" type="image/x-icon">
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f4f6f8;
+    color: #333;
+}
+
+header {
+    background: #0a5e96;
+    color: white;
+    padding: 20px;
+    text-align: center;
+    position: relative;
+}
+
+.menu-icon {
+    position: absolute;
+    left: 20px;
+    top: 18px;
+    font-size: 28px;
+    cursor: pointer;
+}
+
+.menu {
+    display: none;
+    position: absolute;
+    top: 60px;
+    left: 20px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    width: 230px;
+    z-index: 1000;
+}
+
+.menu a {
+    display: block;
+    padding: 14px;
+    text-decoration: none;
+    color: #333;
+    border-bottom: 1px solid #eee;
+}
+
+.menu a:hover {
+    background: #f1f1f1;
+}
+
+.menu a:last-child {
+    color: #333;
+    text-align: center;
+}
+
+.container {
+    max-width: 1100px;
+    margin: auto;
+    padding: 30px 20px;
+    text-align: center;
+}
+
+.intro {
+    font-size: 18px;
+    line-height: 1.7;
+}
+
+.buttons a {
+    display: inline-block;
+    padding: 14px 30px;
+    margin: 15px;
+    border-radius: 6px;
+    font-weight: bold;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.btn-design {
+    background: #007bff;
+    color: white;
+}
+
+.btn-order {
+    background: #28a745;
+    color: white;
+}
+
+.buttons a:hover {
+    transform: scale(1.05);
+}
+
+.portfolio {
+    margin-top: 60px;
+}
+
+.portfolio-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+}
+
+.portfolio-item {
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    transition: 0.3s;
+}
+
+.portfolio-item:hover {
+    transform: translateY(-8px);
+}
+
+.price {
+    color: #28a745;
+    font-weight: bold;
+    font-size: 17px;
+}
+
+
+#order {
+    display: none;
+    animation: fadeSlide 0.4s ease;
+}
+
+@keyframes fadeSlide {
+    from {opacity: 0; transform: translateY(20px);}
+    to {opacity: 1; transform: translateY(0);}
+}
+
+form {
+    background: white;
+    margin-top: 60px;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    text-align: left;
+}
+
+form h2 {
+    text-align: center;
+}
+
+input, select, textarea {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+button {
+    width: 100%;
+    padding: 14px;
+    background: #25d366;
+    color: white;
+    border: none;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #1ebe5d;
+}
+
+.whatsapp-float {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #25d366;
+    color: white;
+    padding: 15px 20px;
+    border-radius: 50px;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+footer {
+    background: #2250b3;
+    color: #ccc;
+    padding: 20px;
+    text-align: center;
+    margin-top: 60px;
+}
+footer .footed small {
+    color: #ccc;
+    cursor: pointer;
+    margin: 0 8px;
+    text-decoration: none;
+}
+footer .footed small:hover {
+    color:white;
+    text-decoration: underline;
+}
+.profile-header{
+  display:flex;
+  align-items:center;
+  justify-content:center; /* center whole block */
+  gap:15px;
+  margin-top:20px;
+}
+
+.profile-header img{
+  width:90px;
+  height:90px;
+  border-radius:50%;
+  border:2px solid white;
+  object-fit:cover;
+}
+
+.profile-text h1{
+  margin:0;
+  font-size:2.3rem;
+}
+
+.profile-text h2{
+  margin:0;
+  font-size:1.5rem;
+  font-weight:400;
+  color:#ccc; /* optional if header bg is dark */
+}
+@media(max-width:600px){
+  .profile-header{
+    flex-direction:column;
+    text-align:center;
+  }
+}
+.intro{
+  max-width:900px;
+  margin:2.5rem auto;
+  padding:0 1rem;
+  font-size:20px;
+  line-height:2;
+  text-align:center;
+  font-weight:500;
+
+  /* Gradient text */
+  background:linear-gradient(
+    120deg,
+    #000000,
+    #c0392b,
+    #27ae60,
+    #f1c40f,
+    #000000
+  );
+   background-size:300% 300%;
+   -webkit-background-clip:text;
+   background-clip:text;
+  -webkit-text-fill-color:transparent;
+
+  /* Animation */
+  animation: luxuryFlow 12s ease-in-out infinite;
+}
+
+/* Hover = pause animation */
+.intro:hover{
+  animation-play-state:paused;
+}
+
+/* Keyframes */
+@keyframes luxuryFlow{
+  0%{
+    background-position:0% 50%;
+    transform:translateX(0);
+  }
+  50%{
+    background-position:100% 50%;
+    transform:translateX(8px);
+  }
+  100%{
+    background-position:0% 50%;
+    transform:translateX(0);
+  }
+}
+
+/* Mobile polish */
+@media(max-width:600px){
+  .intro{
+    font-size:0.95rem;
+    line-height:1.7;
+  }
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="menu-icon" onclick="toggleMenu()">☰</div>
+    <div class="profile-header">
+  <img src="DAUDI.jpg" alt="Daudi Mtale - Designer Davie">
+  <div class="profile-text">
+    <h1>Designer Davie</h1>
+    <h2>Graphics Designing & Branding Services</h2>
+  </div>
+</div>
+
+
+    <div class="menu" id="menu">
+        <a href="front page.html">Home</a>
+        <a href="about me.html">About</a>
+        <a href="contacts.html">Contacts</a>
+        <a href="terms and conditions1.html">Terms and Conditions</a>
+        <a href="Login1.html">Cooperate</a>
+    </div>
+</header>
+
+<div class="container">
+
+<p class="intro">
+Hi!, It's Designer Davie here.<br> 
+I specialize in creating stunning graphics designs that elevate your brand's identity.<br>
+ Whether you need a logo, letterheads, cover arts, posters, flyers, or brochures, I've got you covered.<br>
+ Explore my portfolio below and feel free to place an order directly via WhatsApp!
+</p>
+
+<div class="buttons">
+    <a href="my designs.html" class="btn-design">See My Designs</a>
+    <a href="javascript:void(0)" class="btn-order" onclick="openOrder()">Order</a>
+</div>
+
+<section class="portfolio" id="portfolio">
+<h2>My Designs</h2>
+
+<div class="portfolio-grid">
+    <div class="portfolio-item"><h3>Logo Design</h3><p class="price">50,000 TZS</p></div>
+    <div class="portfolio-item"><h3>Letterheads Design</h3><p class="price">30,000 TZS</p></div>
+    <div class="portfolio-item"><h3>Cover Arts Design</h3><p class="price">40,000 TZS</p></div>
+    <div class="portfolio-item"><h3>Poster Design</h3><p class="price">25,000 TZS</p></div>
+    <div class="portfolio-item"><h3>Flyers Design</h3><p class="price">20,000 TZS</p></div>
+    <div class="portfolio-item"><h3>Brochures Design</h3><p class="price">28,000 TZS</p></div>
+</div>
+</section>
+
+<section id="order">
+<form onsubmit="sendWhatsApp(); return false;">
+<h2>Place Your Order</h2>
+
+<input type="text" id="name" placeholder="Your Name" required>
+
+<select id="service">
+    <option>Logo Design</option>
+    <option>Letterheads Design</option>
+    <option>Cover Arts Design</option>
+    <option>Poster Design</option>
+    <option>Flyers Design</option>
+    <option>Brochures Design</option>
+</select>
+
+<textarea id="message" placeholder="Order details..." required></textarea>
+
+<button type="submit">Send Order via WhatsApp</button>
+</form>
+</section>
+
+</div>
+
+<a class="whatsapp-float" href="https://wa.me/255794254568" target="_blank">WhatsApp</a>
+
+<footer>
+<p class="footed"><small><a href="contacts.html">Contact</a></small> |<small> <a href="support.html">Support</a></small> |<small> <a href="policy.html">Policies</a></small> |<small> <a href="terms and conditions1.html">Terms & Conditions</a></small></p>
+<p>© 2026 | All Rights Reserved</p>
+</footer>
+
+<script>
+function toggleMenu() {
+    const menu = document.getElementById("menu");
+    menu.style.display = menu.style.display === "block" ? "none" : "block";
+}
+
+function openOrder() {
+    const order = document.getElementById("order");
+    order.style.display = "block";
+    order.scrollIntoView({ behavior: "smooth" });
+}
+
+function sendWhatsApp() {
+    let name = document.getElementById("name").value;
+    let service = document.getElementById("service").value;
+    let message = document.getElementById("message").value;
+
+    let phone = "255794254568"; // replace with your number
+    let text = `Hello, my name is ${name}. I want ${service}. Details: ${message}`;
+
+    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(text)}`, "_blank");
+}
+</script>
+
+</body>
+</html>
