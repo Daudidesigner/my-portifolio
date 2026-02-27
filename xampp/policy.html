@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Policies - Designer Davie</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="icon" href="1ct3.jpg" type="image/x-icon">
+<style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:'Montserrat',sans-serif; background:linear-gradient(135deg,#f7f7f7,#e0e0ff); color:#333; }
+    .container { max-width:900px; margin:50px auto; background:#fff; padding:40px; border-radius:15px; box-shadow:0 10px 25px rgba(0,0,0,0.1); }
+    h1 { text-align:center; color:#4b59f7; margin-bottom:20px; }
+    p.subtitle { text-align:center; color:#555; margin-bottom:40px; }
+
+    .policy-section { margin-bottom:30px; }
+    .policy-section h2 { color:#4b59f7; margin-bottom:15px; }
+    .policy-section p { margin-bottom:15px; line-height:1.6; color:#444; }
+
+    /* Collapsible toggle */
+    .collapsible {
+        background-color:#e0e0ff;
+        color:#333;
+        cursor:pointer;
+        padding:15px;
+        width:100%;
+        border:none;
+        text-align:left;
+        outline:none;
+        font-size:1.05rem;
+        border-radius:8px;
+        margin-bottom:10px;
+        transition: background 0.2s;
+    }
+    .collapsible:hover { background:#4b59f7; color:#fff; }
+    .content {
+        padding:0 15px;
+        max-height:0;
+        overflow:hidden;
+        transition:max-height 0.3s ease;
+        background:#f9f9ff;
+        border-radius:0 0 8px 8px;
+        margin-bottom:15px;
+    }
+    input[type="submit"] {
+        background:#ccc; color:#333; padding:12px 25px; border:none; border-radius:8px; cursor:pointer; font-size:1rem; transition:background 0.2s, transform 0.2s;
+    }
+    input[type="submit"]:hover {
+        background:#1f3cd0; transform:translateY(-2px);
+        color: white;
+    }
+      footer {
+    background: #2250b3;
+    color: #ccc;
+    padding: 20px;
+    text-align: center;
+    margin-top: 60px;
+}
+footer .footed small {
+    color: #ccc;
+    cursor: pointer;
+    margin: 0 8px;
+    text-decoration: none;
+}
+footer .footed small:hover {
+    color:white;
+    text-decoration: underline;
+}
+
+    @media(max-width:768px){ .container{ padding:30px 20px; } }
+</style>
+</head>
+<body>
+<div class="container">
+    <h1>Policies - Designer Davie</h1>
+    <p class="subtitle">Read our policies carefully to understand how we work and protect your rights.</p>
+
+    <!-- Privacy Policy -->
+    <button class="collapsible">Privacy Policy</button>
+    <div class="content">
+        <p>We value your privacy. All personal information collected from clients, including names, emails, and project details, is kept confidential and used solely for the purpose of providing design services. We do not share client information with third parties.</p>
+    </div>
+
+    <!-- Refund Policy -->
+    <button class="collapsible">Refund Policy</button>
+    <div class="content">
+        <p>We strive to provide high-quality designs. Refunds may be offered in cases of dissatisfaction, provided the client clearly communicates issues within 7 days of project delivery. Minor revisions are free; major changes may require additional fees as agreed in advance.</p>
+    </div>
+
+    <!-- Terms of Service -->
+    <button class="collapsible">Terms of Service</button>
+    <div class="content">
+        <p>By using Designer Davie services, clients agree to provide accurate information and respect intellectual property rights. All designs remain the property of Designer Davie until full payment is received. Unauthorized use or distribution of designs is prohibited.</p>
+    </div>
+<div class="backing">
+    <form action="front page.html">
+        <input type="submit" value="Back">
+    </form>
+</div>
+</div>
+<footer>
+<p class="footed"><small><a href="front page.html">Home</a></small> |<small><a href="contacts.html">Contact</a></small>|<small> <a href="support.html">Support</a></small> |<small> <a href="policy.html">Policies</a></small> |<small> <a href="terms and conditions1.html">Terms & Conditions</a></small></p>
+<p>© 2026 | All Rights Reserved</p>
+</footer>
+
+<script>
+    const coll = document.querySelectorAll('.collapsible');
+    coll.forEach(button => {
+        button.addEventListener('click', () => {
+            button.classList.toggle('active');
+            const content = button.nextElementSibling;
+            if(content.style.maxHeight){
+                content.style.maxHeight = null;
+            } else {
+                content.style.maxHeight = content.scrollHeight + "px";
+            }
+        });
+    });
+</script>
+</body>
+</html>

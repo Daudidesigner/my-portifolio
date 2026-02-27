@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Creative Collaboration Dashboard</title>
+<link rel="icon" href="1ct3.jpg" type="image/x-icon">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Montserrat', sans-serif; }
+
+body {
+    display:flex;
+    min-height:100vh;
+    background: linear-gradient(135deg,#eef2ff,#dfe9ff);
+    color:#333;
+    overflow-x: hidden;
+}
+
+/* ===== SIDEBAR ===== */
+.sidebar {
+    width:260px;
+    background:#1f2a63;
+    color:white;
+    padding:25px 15px;
+    display:flex;
+    flex-direction:column;
+    position:fixed;
+    height:100%;
+    transition: transform 0.3s ease;
+    z-index:1000; /* Increased for mobile priority */
+}
+
+.sidebar.hide {
+    transform: translateX(-100%);
+}
+
+.sidebar h2 {
+    text-align:center;
+    margin-bottom:30px;
+    font-weight:700;
+}
+
+.sidebar a {
+    text-decoration:none;
+    color:#ddd;
+    padding:12px 15px;
+    border-radius:8px;
+    margin-bottom:8px;
+    display:block;
+    transition:0.2s;
+    cursor:pointer;
+}
+
+.sidebar a:hover,
+.sidebar a.active {
+    background:#4b59f7;
+    color:white;
+}
+
+/* Close button for mobile sidebar */
+.close-sidebar {
+    display: none;
+    text-align: right;
+    font-size: 1.5rem;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+
+/* ===== MAIN AREA ===== */
+.main {
+    margin-left:260px;
+    width:100%;
+    padding:25px 35px;
+    transition: margin-left 0.3s ease;
+}
+
+.main.full {
+    margin-left:0;
+}
+
+/* TOP BAR */
+.topbar {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:30px;
+}
+
+.topbar h1 {
+    font-size:1.5rem;
+    color:#1f2a63;
+}
+
+.profile {
+    display:flex;
+    align-items:center;
+    gap:15px;
+    position:relative;
+}
+
+.profile img {
+    width:40px;
+    height:40px;
+    border-radius:50%;
+    cursor:pointer;
+    -webkit-touch-callout: none; /* Prevents default mobile browser popup */
+}
+
+.logout {
+    background:#ff4d4d;
+    color:white;
+    padding:8px 14px;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+}
+
+/* PROFILE MENU */
+.profile-menu {
+    position:absolute;
+    top:50px;
+    right:0;
+    background:white;
+    border-radius:10px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.15);
+    display:none;
+    flex-direction:column;
+    min-width:160px;
+    overflow:hidden;
+    z-index:1100;
+}
+
+.profile-menu button {
+    padding:12px;
+    border:none;
+    background:none;
+    text-align:left;
+    cursor:pointer;
+    width: 100%;
+}
+
+.profile-menu button:hover {
+    background:#f1f3ff;
+}
+
+/* ===== DASHBOARD CARDS ===== */
+.cards {
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap:20px;
+    margin-bottom:40px;
+}
+
+.card {
+    background:white;
+    padding:20px;
+    border-radius:12px;
+    box-shadow:0 8px 20px rgba(0,0,0,0.08);
+}
+
+.card h3 {
+    font-size:1rem;
+    margin-bottom:10px;
+    color:#555;
+}
+
+.card p {
+    font-size:1.5rem;
+    font-weight:700;
+    color:#4b59f7;
+}
+
+/* ===== PROJECT SECTION ===== */
+.section-title {
+    margin-bottom:15px;
+    font-size:1.2rem;
+    color:#1f2a63;
+}
+
+.projects {
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap:20px;
+    margin-bottom:40px;
+}
+
+.project-card {
+    background:white;
+    padding:20px;
+    border-radius:12px;
+    box-shadow:0 8px 20px rgba(0,0,0,0.08);
+}
+
+.progress {
+    background:#eee;
+    border-radius:20px;
+    height:8px;
+    margin:10px 0;
+}
+
+.progress div {
+    height:100%;
+    background:#4b59f7;
+    border-radius:20px;
+}
+
+/* ===== GOALS ===== */
+.goals {
+    background:white;
+    padding:20px;
+    border-radius:12px;
+    box-shadow:0 8px 20px rgba(0,0,0,0.08);
+}
+
+.goal {
+    margin-bottom:15px;
+}
+
+.goal span {
+    font-weight:600;
+    font-size:0.9rem;
+}
+
+/* ===== SECTION WRAPPERS ===== */
+.section {
+    background:white;
+    padding:20px;
+    border-radius:12px;
+    box-shadow:0 8px 20px rgba(0,0,0,0.08);
+    margin-bottom:30px;
+    display:none;
+}
+
+.chat-box {display:flex; flex-direction:column; height:300px;}
+.chat-messages {flex:1; padding:10px; overflow-y:auto; border:1px solid #eee; margin-bottom:10px; border-radius:8px;}
+.chat-input {display:flex; gap:10px;}
+.chat-input input {flex:1; padding:10px; border-radius:8px; border:1px solid #ccc;}
+.chat-input button {background:#4b59f7; color:white; border:none; padding:10px 15px; border-radius:8px; cursor:pointer;}
+
+.team-list li {margin-bottom:6px; list-style: none;}
+.file-list li {margin-bottom:6px; font-size:0.9rem; display:flex; justify-content:space-between; align-items:center; list-style: none;}
+
+/* DELETE BUTTONS */
+.delete-btn {
+    background:none;
+    border:none;
+    color:red;
+    cursor:pointer;
+    font-size:0.9rem;
+}
+
+/* MODAL */
+.modal {position:fixed; inset:0; background:rgba(0,0,0,0.8); display:none; justify-content:center; align-items:center; z-index:2000;}
+.modal img {max-width:90%; max-height: 80%; border-radius:10px; border:4px solid white;}
+
+/* HAMBURGER */
+.hamburger {
+    display:none;
+    font-size:1.8rem;
+    cursor:pointer;
+    margin-bottom: 20px;
+    color: #1f2a63;
+}
+
+/* ===== RESPONSIVE MEDIA QUERIES ===== */
+@media (max-width:1024px){
+    .cards, .projects, .goals { 
+        grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
+    }
+}
+
+@media (max-width:768px){
+    .sidebar {
+        width:250px;
+        transform:translateX(-100%);
+    }
+    .sidebar.active {
+        transform:translateX(0);
+    }
+    .close-sidebar { display: block; }
+    .main { margin-left:0; padding:15px; width: 100%; }
+    .hamburger { display:block; }
+    .topbar { flex-direction: row; flex-wrap: wrap; }
+    .topbar h1 { width: 100%; margin-bottom: 10px; font-size: 1.3rem; }
+    #welcomeText { display: none; } /* Hide text on small mobiles to save space */
+}
+
+@media (max-width:480px){
+    .topbar h1 { font-size:1.1rem; }
+    .cards .card p { font-size:1.2rem; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="sidebar" id="sidebar">
+    <div class="close-sidebar" onclick="toggleSidebar()">✕</div>
+    <h2>Creative Hub</h2>
+    <a class="active" onclick="showSection('dashboard')">🏠 Dashboard</a>
+    <a onclick="showSection('projects')">🎨 Projects</a>
+    <a onclick="showSection('collab')">🤝 Collaborations</a>
+    <a onclick="showSection('market')">💰 Marketplace</a>
+    <a onclick="showSection('files')">📁 Shared Files</a>
+    <a onclick="showSection('goals')">🎯 Goals</a>
+    <a onclick="showSection('chat')">💬 Team Chat</a>
+    <a onclick="showSection('settings')">⚙ Settings</a>
+</div>
+
+<div class="main" id="mainContent">
+    <span class="hamburger" onclick="toggleSidebar()">☰ Menu</span>
+
+    <div class="topbar">
+        <h1>Team Dashboard</h1>
+        <div class="profile" id="profileArea">
+            <span id="welcomeText">Welcome, Davie</span>
+            <img id="profileImage" src="https://i.pravatar.cc/100" alt="profile">
+            <div class="profile-menu" id="profileMenu">
+                <button onclick="viewPhoto()">👁 View Photo</button>
+                <button onclick="changePhoto()">✏ Change Photo</button>
+                <button onclick="removePhoto()">🗑 Remove Photo</button>
+            </div>
+            <button class="logout" onclick="logout()">Logout</button>
+        </div>
+    </div>
+
+    <div class="cards section" id="dashboard" style="display:block">
+        <div class="card">
+            <h3>Active Projects</h3>
+            <p>6</p>
+        </div>
+        <div class="card">
+            <h3>Team Members Online</h3>
+            <p id="teamCount">0</p>
+        </div>
+        <div class="card">
+            <h3>Monthly Earnings</h3>
+            <p>$1,240</p>
+        </div>
+        <div class="card">
+            <h3>Tasks Due</h3>
+            <p>9</p>
+        </div>
+    </div>
+
+    <div class="section projects" id="projects">
+        <div class="section-title">Ongoing Projects</div>
+        <div class="project-card">
+            <h3>Brand Identity Kit</h3>
+            <div class="progress"><div style="width:70%"></div></div>
+            <small>Deadline: Feb 10</small>
+        </div>
+        <div class="project-card">
+            <h3>Website UI Design</h3>
+            <div class="progress"><div style="width:45%"></div></div>
+            <small>Deadline: Feb 18</small>
+        </div>
+    </div>
+
+    <div class="section goals" id="goals">
+        <div class="section-title">Team Goals</div>
+        <div class="goal">
+            <span>🎯 Sales Goal</span>
+            <div class="progress"><div style="width:60%"></div></div>
+        </div>
+    </div>
+
+    <div class="section" id="collab">
+        <div class="section-title">Team Members</div>
+        <ul class="team-list" id="teamList"></ul>
+        <div class="chat-input">
+            <input type="text" id="newMember" placeholder="Name">
+            <button onclick="addMember()">Add</button>
+        </div>
+    </div>
+
+    <div class="section" id="chat">
+        <div class="section-title">Team Chat</div>
+        <div class="chat-box">
+            <div class="chat-messages" id="chatMessages"></div>
+            <div class="chat-input">
+                <input type="text" id="chatInput" placeholder="Message...">
+                <button onclick="sendMessage()">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="section" id="files">
+        <div class="section-title">Shared Files</div>
+        <input type="file" id="fileUpload">
+        <ul class="file-list" id="fileList"></ul>
+    </div>
+
+    <div class="section" id="settings">
+        <div class="section-title">Settings</div>
+        <p>Settings coming soon...</p>
+    </div>
+
+</div>
+
+<div class="modal" id="photoModal" onclick="this.style.display='none'">
+    <img id="modalImg">
+</div>
+<input type="file" id="newPhotoInput" accept="image/*" style="display:none">
+
+<!-- Firebase SDKs for plain HTML/JS -->
+<script src="https://www.gstatic.com/firebasejs/9.30.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.30.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.30.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.30.0/firebase-analytics-compat.js"></script>
+
+<script>
+  // Your Firebase Config
+  const firebaseConfig = {
+    apiKey: "AIzaSyBqSxgQCsUFgIz7eetzb2MMbO_DkHN2Zu8",
+    authDomain: "my-portifolio-3f4c5.firebaseapp.com",
+    projectId: "my-portifolio-3f4c5",
+    storageBucket: "my-portifolio-3f4c5.firebasestorage.app",
+    messagingSenderId: "1036053397124",
+    appId: "1:1036053397124:web:3bdfea641c319d176a0cd1",
+    measurementId: "G-MLBNWNV99Y"
+  };
+
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+  const analytics = firebase.analytics();
+</script>
+
+<script>
+    auth.onAuthStateChanged((user) => {
+  if (!user) {
+    window.location = "login.html";
+  }
+});
+
+</script>
+
+<script>
+// SIDEBAR TOGGLE
+function toggleSidebar(){
+    const sb=document.getElementById('sidebar');
+    sb.classList.toggle('active');
+    // For Desktop
+    sb.classList.toggle('hide');
+    document.getElementById('mainContent').classList.toggle('full');
+}
+
+// SHOW SECTIONS
+function showSection(id){
+    document.querySelectorAll('.section').forEach(sec=>sec.style.display='none');
+    document.getElementById(id).style.display='block';
+    document.querySelectorAll('.sidebar a').forEach(a=>a.classList.remove('active'));
+    
+    // Close sidebar on mobile after clicking a link
+    if(window.innerWidth <= 768) {
+        document.getElementById('sidebar').classList.remove('active');
+        document.getElementById('sidebar').classList.add('hide');
+    }
+}
+
+// PROFILE MENU (PC RIGHT CLICK + MOBILE LONG PRESS)
+const profileArea = document.getElementById("profileArea");
+const profileMenu = document.getElementById("profileMenu");
+const profileImage = document.getElementById("profileImage");
+
+// Right click for PC
+profileArea.addEventListener("contextmenu", e => { 
+    e.preventDefault(); 
+    profileMenu.style.display="flex"; 
+});
+
+// Long Press for Mobile
+let pressTimer;
+profileImage.addEventListener('touchstart', (e) => {
+    pressTimer = window.setTimeout(() => {
+        profileMenu.style.display = "flex";
+    }, 800); // 800ms hold to trigger
+});
+
+profileImage.addEventListener('touchend', () => {
+    clearTimeout(pressTimer);
+});
+
+// Close menu when clicking away
+document.addEventListener("click", (e) => {
+    if(!profileArea.contains(e.target)) profileMenu.style.display="none";
+});
+
+// PHOTO MANAGEMENT
+let photo = localStorage.getItem("creativeHubPhoto") || "https://i.pravatar.cc/100";
+let username = localStorage.getItem("creativeHubUser") || "Davie";
+document.getElementById("welcomeText").textContent = "Welcome, " + username;
+profileImage.src = photo;
+
+function viewPhoto(){
+    document.getElementById("modalImg").src=profileImage.src; 
+    document.getElementById("photoModal").style.display="flex";
+}
+function changePhoto(){document.getElementById("newPhotoInput").click();}
+
+document.getElementById("newPhotoInput").addEventListener("change", e=>{
+    const reader = new FileReader();
+    reader.onload=()=>{ 
+        photo=reader.result; 
+        localStorage.setItem("creativeHubPhoto",photo); 
+        profileImage.src=photo; 
+    }
+    reader.readAsDataURL(e.target.files[0]);
+});
+
+function removePhoto(){ 
+    localStorage.removeItem("creativeHubPhoto"); 
+    profileImage.src="https://i.pravatar.cc/100"; 
+}
+
+// LOGOUT
+function logout(){ alert("Logging out..."); }
+
+// TEAM MEMBERS
+let team=JSON.parse(localStorage.getItem("creativeHubTeam")||"[]");
+function renderTeam(){
+    const teamList=document.getElementById("teamList");
+    teamList.innerHTML="";
+    team.forEach(name=>{
+        const li=document.createElement("li");
+        li.textContent="• " + name;
+        teamList.appendChild(li);
+    });
+    document.getElementById("teamCount").textContent=team.length;
+}
+function addMember(){
+    const input=document.getElementById("newMember");
+    if(!input.value.trim()) return;
+    team.push(input.value);
+    localStorage.setItem("creativeHubTeam",JSON.stringify(team));
+    input.value="";
+    renderTeam();
+}
+renderTeam();
+
+// CHAT
+const chatBox=document.getElementById("chatMessages");
+let messages=JSON.parse(localStorage.getItem("creativeHubChat")||"[]");
+
+function renderChat(){
+    chatBox.innerHTML = "";
+    messages.forEach((msg, index) => {
+        const div = document.createElement("div");
+        div.style.marginBottom = "8px";
+        div.style.display = "flex";
+        div.style.justifyContent = "space-between";
+        div.style.alignItems = "center";
+        div.innerHTML = `<span><strong>${msg.user}:</strong> ${msg.text}</span> 
+                         <button class="delete-btn" onclick="deleteMessage(${index})">🗑</button>`;
+        chatBox.appendChild(div);
+    });
+    chatBox.scrollTop=chatBox.scrollHeight;
+}
+
+function sendMessage(){
+    const input=document.getElementById("chatInput");
+    if(!input.value.trim()) return;
+    const msg={user:username,text:input.value};
+    messages.push(msg);
+    localStorage.setItem("creativeHubChat",JSON.stringify(messages));
+    input.value="";
+    renderChat();
+}
+
+function deleteMessage(index){
+    messages.splice(index, 1);
+    localStorage.setItem("creativeHubChat", JSON.stringify(messages));
+    renderChat();
+}
+renderChat();
+
+// FILE SHARING
+let files=JSON.parse(localStorage.getItem("creativeHubFiles")||"[]");
+function renderFiles(){
+    const fl=document.getElementById("fileList");
+    fl.innerHTML="";
+    files.forEach((f,i)=>{
+        const li=document.createElement("li");
+        li.innerHTML=`<span>${f.name}</span> <button class="delete-btn" onclick="deleteFile(${i})">🗑</button>`;
+        fl.appendChild(li);
+    });
+}
+document.getElementById("fileUpload").addEventListener("change", e=>{
+    const file=e.target.files[0];
+    const reader=new FileReader();
+    reader.onload=()=>{
+        files.push({name:file.name,data:reader.result});
+        localStorage.setItem("creativeHubFiles",JSON.stringify(files));
+        renderFiles();
+    };
+    reader.readAsDataURL(file);
+});
+function deleteFile(i){ files.splice(i,1); localStorage.setItem("creativeHubFiles",JSON.stringify(files)); renderFiles(); }
+renderFiles();
+</script>
+
+</body>
+</html>

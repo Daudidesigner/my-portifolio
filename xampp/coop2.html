@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Creative Collaboration Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Montserrat',sans-serif;}
+body{display:flex;min-height:100vh;background:linear-gradient(135deg,#eef2ff,#dfe9ff);}
+
+.sidebar{
+    width:260px;background:#1f2a63;color:white;padding:25px 15px;
+    display:flex;flex-direction:column;position:fixed;height:100%;
+}
+.sidebar h2{text-align:center;margin-bottom:30px;}
+.sidebar a{color:#ddd;text-decoration:none;padding:12px;border-radius:8px;margin-bottom:8px;}
+.sidebar a:hover,.sidebar a.active{background:#4b59f7;color:white;}
+
+.main{margin-left:260px;width:100%;padding:25px 35px;}
+
+.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:30px;}
+.welcome{font-size:1.4rem;color:#1f2a63;font-weight:600;}
+
+.profile-area{display:flex;align-items:center;gap:15px;}
+.profile-area img{width:45px;height:45px;border-radius:50%;object-fit:cover;border:2px solid #4b59f7;}
+
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;margin-bottom:40px;}
+.card{background:white;padding:20px;border-radius:12px;box-shadow:0 8px 20px rgba(0,0,0,0.08);}
+.card h3{font-size:1rem;margin-bottom:10px;color:#555;}
+.card p{font-size:1.5rem;font-weight:700;color:#4b59f7;}
+
+.section-title{margin-bottom:15px;font-size:1.2rem;color:#1f2a63;}
+.projects{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;margin-bottom:40px;}
+.project-card{background:white;padding:20px;border-radius:12px;box-shadow:0 8px 20px rgba(0,0,0,0.08);}
+.progress{background:#eee;border-radius:20px;height:8px;margin:10px 0;}
+.progress div{height:100%;background:#4b59f7;border-radius:20px;}
+
+@media(max-width:768px){
+.sidebar{position:relative;width:100%;height:auto;flex-direction:row;overflow-x:auto;}
+.main{margin-left:0;padding:20px;}
+}
+</style>
+</head>
+
+<body>
+
+<div class="sidebar">
+    <h2>Creative Hub</h2>
+    <a href="#" class="active">🏠 Dashboard</a>
+    <a href="#">🎨 Projects</a>
+    <a href="#">🤝 Collaborations</a>
+    <a href="#">💰 Marketplace</a>
+    <a href="#">📁 Shared Files</a>
+    <a href="#">🎯 Goals</a>
+    <a href="#">💬 Team Chat</a>
+    <a href="#">⚙ Settings</a>
+</div>
+
+<div class="main">
+    <div class="topbar">
+        <div class="welcome" id="welcomeText">Welcome</div>
+        <div class="profile-area">
+            <img id="profileImage" src="">
+        </div>
+    </div>
+
+    <div class="cards">
+        <div class="card"><h3>Active Projects</h3><p>6</p></div>
+        <div class="card"><h3>Team Members Online</h3><p>4</p></div>
+        <div class="card"><h3>Monthly Earnings</h3><p>$1,240</p></div>
+        <div class="card"><h3>Tasks Due</h3><p>9</p></div>
+    </div>
+
+    <div class="section-title">Ongoing Projects</div>
+    <div class="projects">
+        <div class="project-card">
+            <h3>Brand Identity Kit</h3>
+            <p>Team: 3 Members</p>
+            <div class="progress"><div style="width:70%"></div></div>
+        </div>
+        <div class="project-card">
+            <h3>Website UI Design</h3>
+            <p>Team: 2 Members</p>
+            <div class="progress"><div style="width:45%"></div></div>
+        </div>
+    </div>
+</div>
+
+<script>
+const username = localStorage.getItem("creativeHubUser");
+const photo = localStorage.getItem("creativeHubPhoto");
+
+if(username && photo){
+    document.getElementById("welcomeText").textContent = "Welcome, " + username;
+    document.getElementById("profileImage").src = photo;
+}else{
+    window.location.href = "profile-setup.html";
+}
+</script>
+
+</body>
+</html>

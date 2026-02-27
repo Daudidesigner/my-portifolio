@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Join Creative Hub</title>
+<link rel="icon" href="1ct3.jpg" type="image/x-icon">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Montserrat',sans-serif;}
+body{
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:linear-gradient(135deg,#4b59f7,#6a75ff);
+}
+
+.form-box{
+    background:white;
+    padding:40px;
+    border-radius:15px;
+    width:95%;
+    max-width:400px;
+    text-align:center;
+    box-shadow:0 15px 35px rgba(0,0,0,0.2);
+}
+
+.form-box h1{
+    margin-bottom:10px;
+    color:#4b59f7;
+}
+
+.form-box p{
+    font-size:0.9rem;
+    margin-bottom:25px;
+    color:#666;
+}
+
+input[type="text"]{
+    width:100%;
+    padding:12px;
+    border-radius:8px;
+    border:1px solid #ccc;
+    margin-bottom:20px;
+}
+
+.photo-upload{
+    margin-bottom:20px;
+}
+
+.photo-upload img{
+    width:90px;
+    height:90px;
+    border-radius:50%;
+    object-fit:cover;
+    border:3px solid #4b59f7;
+    cursor:pointer;
+}
+
+input[type="file"]{display:none;}
+
+button{
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:8px;
+    background:#4b59f7;
+    color:white;
+    font-size:1rem;
+    cursor:pointer;
+    transition:0.2s;
+}
+
+button:hover{background:#1f3cd0;}
+</style>
+</head>
+<body>
+
+<div class="form-box">
+    <h1>Creative Hub</h1>
+    <p>Set up your profile to enter the collaboration dashboard</p>
+
+    <input type="text" id="username" placeholder="Enter your username" required>
+
+    <div class="photo-upload">
+        <label for="photoInput">
+            <img id="photoPreview" src="https://via.placeholder.com/90" alt="Upload Photo">
+        </label>
+        <input type="file" id="photoInput" accept="image/*">
+    </div>
+
+    <button onclick="enterDashboard()">Enter Dashboard</button>
+</div>
+
+<!-- Firebase SDKs for plain HTML/JS -->
+<script src="https://www.gstatic.com/firebasejs/9.30.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.30.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.30.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.30.0/firebase-analytics-compat.js"></script>
+
+<script>
+  // Your Firebase Config
+  const firebaseConfig = {
+    apiKey: "AIzaSyBqSxgQCsUFgIz7eetzb2MMbO_DkHN2Zu8",
+    authDomain: "my-portifolio-3f4c5.firebaseapp.com",
+    projectId: "my-portifolio-3f4c5",
+    storageBucket: "my-portifolio-3f4c5.firebasestorage.app",
+    messagingSenderId: "1036053397124",
+    appId: "1:1036053397124:web:3bdfea641c319d176a0cd1",
+    measurementId: "G-MLBNWNV99Y"
+  };
+
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+  const analytics = firebase.analytics();
+</script>
+
+
+<script>
+let photoData = "";
+
+document.getElementById("photoInput").addEventListener("change", function(e){
+    const reader = new FileReader();
+    reader.onload = function(){
+        photoData = reader.result;
+        document.getElementById("photoPreview").src = photoData;
+    }
+    reader.readAsDataURL(e.target.files[0]);
+});
+
+function enterDashboard(){
+    const username = document.getElementById("username").value.trim();
+    if(username === "" || photoData === ""){
+        alert("Please enter username and upload a photo.");
+        return;
+    }
+
+    localStorage.setItem("creativeHubUser", username);
+    localStorage.setItem("creativeHubPhoto", photoData);
+
+    window.location.href = "dashboard.html";
+}
+</script>
+
+</body>
+</html>

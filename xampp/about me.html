@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Designer Davie - About Me</title>
+    <link rel="icon" href="1ct3.jpg" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #f7f7f7, #e0e0ff);
+            color: #333;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 50px auto;
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 30px;
+        }
+
+        .profile-pic {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            border: 4px solid #4b59f7;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+
+        .profile-pic:hover {
+            transform: scale(1.05);
+        }
+
+        .intro {
+            max-width: 600px;
+        }
+
+        .intro h1 {
+            font-size: 2.2rem;
+            color: #4b59f7;
+        }
+
+        .intro h2 {
+            font-size: 1.2rem;
+            color: #555;
+            margin: 10px 0 20px 0;
+        }
+
+        .bio {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #444;
+            margin-bottom: 30px;
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+
+        .section h3 {
+            color: #4b59f7;
+            margin-bottom: 15px;
+        }
+
+        .skills, .tools {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .skills span, .tools span {
+            background-color: #e0e0ff;
+            color: #333;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: transform 0.2s, background-color 0.2s;
+        }
+
+        .skills span:hover, .tools span:hover {
+            background-color: #4b59f7;
+            color: #fff;
+            transform: translateY(-3px);
+        }
+
+        .contact {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            font-size: 1rem;
+        }
+
+        .contact a {
+            color: #4b59f7;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .contact a:hover {
+            text-decoration: underline;
+        }
+
+        @media(max-width:768px) {
+            .header {
+                flex-direction: column;
+            }
+
+            .intro {
+                text-align: center;
+            }
+        }
+        input[type="submit"] {
+            background-color: #e0e0ff;
+            color: #333;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: transform 0.2s, background-color 0.2s;
+        }
+        input[type="submit"]:hover {
+            background-color: #4b59f7;
+            transform: translateY(-3px);
+            color: white;
+        }
+          footer {
+    background: #2250b3;
+    color: #ccc;
+    padding: 20px;
+    text-align: center;
+    margin-top: 60px;
+}
+footer .footed small {
+    color: #ccc;
+    cursor: pointer;
+    margin: 0 8px;
+    text-decoration: none;
+}
+footer .footed small:hover {
+    color:white;
+    text-decoration: underline;
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="DAUDI.jpg" alt="Daudi Mtale - Designer Davie" class="profile-pic">
+            <div class="intro">
+                <h1>Daudi Mtale</h1>
+                <h2>Branding Name: Designer Davie | Graphics Designer</h2>
+                <p class="bio"><small style="color:red;"><b>For Quality, Professional, and Affordable Design</b></small>, get in touch with us.<br> I have 3 years of experience delivering creative designs that bring brands to life.</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>My Skills</h3>
+            <div class="skills">
+                <span>Logo Design</span>
+                <span>Poster Designs</span>
+                <span>Brochures Designs</span>
+                <span>Lettercards Designs</span>
+                <span>Cover Arts Design</span>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>Tools I Use</h3>
+            <div class="tools">
+                <span>Photoshop</span>
+                <span>Illustrator</span>
+                <span>InDesign</span>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>Contact Me</h3>
+            <div class="contact">
+                <p>📍 Location: Tanzania</p>
+                <p>📞 Phone: <a href="tel:+255794254568">+255 794 254 568</a></p>
+                <p>✉️ Email: <a href="mailto:daudimtale159@gmail.com">daudimtale159@gmail.com</a></p>
+            </div>
+        </div>
+        <form action="front page.html">
+            <input type="submit" value="Back">
+        </form>
+    </div>
+    <footer>
+<p class="footed"><small><a href="front page.html">Home</a></small> |<small><a href="contacts.html">Contact</a></small>|<small> <a href="support.html">Support</a></small> |<small> <a href="policy.html">Policies</a></small> |<small> <a href="terms and conditions1.html">Terms & Conditions</a></small></p>
+<p>© 2026 | All Rights Reserved</p>
+</footer>
+</body>
+</html>

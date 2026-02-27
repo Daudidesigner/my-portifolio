@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Place Your Order</title>
+<link rel="icon" href="1ct3.jpg" type="image/x-icon">
+<style>
+body{
+  margin:0;
+  font-family:'Poppins', sans-serif;
+  background:#f4f6f8;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height:100vh;
+}
+
+form{
+  background:white;
+  width:95%;
+  max-width:500px;
+  padding:25px;
+  border-radius:12px;
+  box-shadow:0 5px 15px rgba(0,0,0,0.1);
+}
+
+h2{
+  text-align:center;
+  margin-bottom:15px;
+}
+
+input, select, textarea{
+  width:100%;
+  padding:12px;
+  margin:10px 0;
+  border-radius:6px;
+  border:1px solid #ccc;
+  font-size:14px;
+}
+
+textarea{resize:vertical; min-height:100px;}
+
+button{
+  width:100%;
+  padding:12px;
+  border:none;
+  border-radius:6px;
+  background:#25D366;
+  color:white;
+  font-size:16px;
+  cursor:pointer;
+  font-weight:bold;
+}
+
+button:hover{background:#1ebe5d;}
+</style>
+</head>
+
+<body>
+
+<form onsubmit="sendWhatsApp(); return false;">
+<h2>Place Your Order</h2>
+
+<input type="text" id="designName" readonly>
+
+<input type="text" id="name" placeholder="Your Name" required>
+
+<select id="service">
+  <option>Logo Design</option>
+  <option>Letterheads Design</option>
+  <option>Cover Arts Design</option>
+  <option>Poster Design</option>
+  <option>Flyers Design</option>
+  <option>Brochures Design</option>
+</select>
+
+<textarea id="message" placeholder="Extra details about your order..." required></textarea>
+
+<button type="submit">Send Order via WhatsApp</button>
+</form>
+
+<script>
+// Get design name from URL
+const params = new URLSearchParams(window.location.search);
+const design = params.get("design");
+
+if(design){
+  document.getElementById("designName").value = "Design You want to Order: " + design;
+}
+
+// WhatsApp sending
+function sendWhatsApp(){
+  const designText = document.getElementById("designName").value;
+  const name = document.getElementById("name").value;
+  const service = document.getElementById("service").value;
+  const message = document.getElementById("message").value;
+
+  const phoneNumber = "255794254568"; // 🔴 PUT YOUR NUMBER HERE
+
+  const text =
+    "🛒 *NEW DESIGN ORDER* %0A%0A" +
+    designText + "%0A" +
+    "👤 Name: " + name + "%0A" +
+    "🖌 Service: " + service + "%0A" +
+    "📝 Details: " + message;
+
+  window.open("https://wa.me/" + phoneNumber + "?text=" + text, "_blank");
+}
+</script>
+
+</body>
+</html>
