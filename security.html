@@ -68,6 +68,7 @@
             <input type="checkbox" id="accept" name="accept" required>
             <label for="accept">I Accept terms and Conditions</label><br>
             <a href="terms and conditions.html">Terms and Conditions</a> <br><br>
+            <p id="error" style="color:red; min-height:20px;"></p><br><br>
             <input type="submit" id="submit" value="Register"disabled>
         </form>
 
@@ -121,53 +122,57 @@
 </script>
 
     // Sasa form listener
-      <script>
-    const securityForm = document.getElementById("security-form");
-    securityForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
+    <script>
+  const securityForm = document.getElementById("security-form");
+  const errorEl = document.createElement("p");
+  errorEl.style.color = "red";
+  errorEl.style.fontSize = "small";
+  securityForm.appendChild(errorEl);
 
-      const password = document.getElementById("pin").value.trim();
-      const signupData = JSON.parse(localStorage.getItem("signupData"));
+  securityForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
 
-      if (!signupData || !signupData.email) {
-        alert("Rud ia sign-up page kwanza.");
-        window.location.href = "sign up page.html";
-        return;
-      }
+    const password = document.getElementById("pin").value.trim();
+    const storedData = JSON.parse(localStorage.getItem("signupData"));
 
-      const email = signupData.email.trim();
+    if (!storedData || !storedData.email) {
+      errorEl.textContent = "Session is expired. Try again letter.";
+      return;
+    }
 
-      try {
-        console.log("Creating user...");
-        const cred = await auth.createUserWithEmailAndPassword(email, password);
-        console.log("User created:", cred.user.uid);
+    const email = storedData.email.trim();
 
-        console.log("Saving to Firestore...");
-        await db.collection("users").doc(cred.user.uid).set({
-          ...signupData,
-          createdAt: firebase.firestore.Timestamp.now()
-        });
-        console.log("Data saved!");
+    try {
+      // 1. Unda user kwa Firebase Auth
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
 
-        alert("Akaunti imeundwa vizuri!");
-        localStorage.removeItem("signupData");
+      // 2. Update display name (optional)
+      await updateProfile(user, {
+        displayName: `${storedData.fname || ''} ${storedData.lname || ''}`.trim()
+      });
 
-        console.log("Redirecting...");
-        window.location.href = "Login1.html";  // Jaribu hii kwanza
+      // 3. Hifadhi data zote kwenye Firestore
+      await setDoc(doc(db, "users", user.uid), {
+        ...storedData,
+        uid: user.uid,
+        createdAt: new Date().toISOString()
+      });
 
-        // Fallback kama haifanyi kazi
-        setTimeout(() => {
-          window.location.replace("Login1.html");
-        }, 1000);
+      // Success
+      localStorage.removeItem("signupData");
+      alert("Your account is created Successfully.");
+      window.location.replace("Login1.html");
 
-      } catch (err) {
-        console.error("Error:", err.code, err.message);
-        alert("Tatizo: " + err.message);
-      }
-    });
+    } catch (err) {
+      console.error("Signup error:", err);
+      let msg = "Error: " + err.message;
+      if (err.code === 'auth/weak-password') msg = "Weak password";
+      if (err.code === 'auth/email-already-in-use') msg = "Email is already used";
+      if (err.code === 'auth/invalid-email') msg = "Email is not correct";
+      errorEl.textContent = msg;
+    }
   });
-</script>
-
 </script>
 
         <script>
@@ -211,6 +216,7 @@
         </script>
     </body>
 </html>
+
 
 
 
