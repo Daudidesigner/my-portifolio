@@ -176,27 +176,37 @@
 <script>
     const signupForm = document.getElementById('signup-form');
 
-signupForm.addEventListener('submit', async (e) => {
+signupForm.addEventListener('submit', (e) => {
   e.preventDefault();
 
   // collect info
-  const fname = document.getElementById('fname').value;
-  const lname = document.getElementById('lname').value;
-  const username = document.getElementById('username').value;
-  const dob = document.getElementById('dob').value;
-  const gender = document.getElementById('gender').value;
-  const residence = document.getElementById('residence').value;
-  const country = document.getElementById('country').value;
-  const telphone = document.getElementById('telphone').value;
-  const email = document.getElementById('email').value;
+const data = {
+      fname: document.getElementById('fname').value.trim(),
+      lname: document.getElementById('lname').value.trim(),
+      username: document.getElementById('username').value.trim(),
+      dob: document.getElementById('dob').value,
+      gender: document.getElementById('gender').value,
+      residence: document.getElementById('residence').value.trim(),
+      country: document.getElementById('country').value,
+      telphone: document.getElementById('telphone').value.trim(),
+      email: document.getElementById('email').value.trim()
+    };
+
+    // Validation ya haraka
+    if (!data.email.includes('@') || !data.email.includes('.')) {
+      alert("please provide a correct emeil (eg. example@gmail.com)");
+      return;
+    }
+    if (data.username.length < 3) {
+      alert("Username must be 3 characters or more");
+      return;
+    }
 
   // Save info temporarily in Firestore (or localStorage for this step)
-  localStorage.setItem("signupData", JSON.stringify({
-    fname, lname, username, dob, gender, residence, country, telphone, email
-  }));
+  localStorage.setItem("signupData", JSON.stringify(data));
 
   // go to security page
-  window.location = "security.html";
+  window.location.href = "security.html";
 });
 
 </script>
@@ -220,3 +230,4 @@ signupForm.addEventListener('submit', async (e) => {
     </body>
 
 </html>
+
