@@ -93,31 +93,84 @@ button:hover{background:#1f3cd0;}
     <button onclick="enterDashboard()">Enter Dashboard</button>
 </div>
 
-<script>
-let photoData = "";
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+  import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 
-document.getElementById("photoInput").addEventListener("change", function(e){
+  const firebaseConfig = {
+    apiKey: "AIzaSyBqSxgQCsUFgIz7eetzb2MMbO_DkHN2Zu8",
+    authDomain: "my-portifolio-3f4c5.firebaseapp.com",
+    projectId: "my-portifolio-3f4c5",
+    storageBucket: "my-portifolio-3f4c5.firebasestorage.app",
+    messagingSenderId: "1036053397124",
+    appId: "1:1036053397124:web:3bdfea641c319d176a0cd1"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  let photoData = "";
+  let currentUser = null;
+
+  // Monitor Auth State (Ensure user is logged in)
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      currentUser = user;
+    } else {
+      // If someone tries to access this page without logging in, send them back
+      window.location.href = "Login1.html";
+    }
+  });
+
+  // Handle Photo Preview
+  document.getElementById("photoInput").addEventListener("change", function(e){
     const reader = new FileReader();
     reader.onload = function(){
-        photoData = reader.result;
-        document.getElementById("photoPreview").src = photoData;
+      photoData = reader.result;
+      document.getElementById("photoPreview").src = photoData;
     }
-    reader.readAsDataURL(e.target.files[0]);
-});
+    if(e.target.files[0]) reader.readAsDataURL(e.target.files[0]);
+  });
 
-function enterDashboard(){
+  // Save to Firebase and Enter Dashboard
+  window.enterDashboard = async function() {
     const username = document.getElementById("username").value.trim();
+    
     if(username === "" || photoData === ""){
-        alert("Please enter username and upload a photo.");
-        return;
+      alert("Please enter username and upload a photo.");
+      return;
     }
 
-    localStorage.setItem("creativeHubUser", username);
-    localStorage.setItem("creativeHubPhoto", photoData);
+    if(!currentUser) {
+      alert("Session expired. Please login again.");
+      return;
+    }
 
-    window.location.href = "dashboard.html";
-}
+    try {
+      // SAVE TO FIRESTORE
+      // This is the "Flag" that Login1.html will check for next time
+      await setDoc(doc(db, "users", currentUser.uid), {
+        username: username,
+        profilePhoto: photoData, // Base64 string
+        email: currentUser.email,
+        setupComplete: true,
+        createdAt: new Date()
+      });
+
+      // Also keep in localStorage for fast loading on dashboard
+      localStorage.setItem("creativeHubUser", username);
+      localStorage.setItem("creativeHubPhoto", photoData);
+
+      window.location.href = "dashboard.html";
+    } catch (error) {
+      console.error("Error saving profile:", error);
+      alert("Failed to save profile. Try again.");
+    }
+  }
 </script>
 
 </body>
 </html>
+
