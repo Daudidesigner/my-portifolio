@@ -287,6 +287,21 @@ footer .footed small:hover {
   }
 }
 
+    <style>
+.quote-box {
+    background: #f2f2f2;
+    padding: 20px;
+    margin: 20px auto;
+    width: 70%;
+    border-left: 5px solid #007bff;
+    border-right: 5px solid #007bff;
+    font-style: italic;
+    font-size: 18px;
+    text-align: center;
+    border-radius: 8px;
+}
+</style>
+    
 </style>
 </head>
 
@@ -312,6 +327,10 @@ footer .footed small:hover {
     </div>
 </header>
 
+    <div id="quoteBox" class="quote-box">
+    <p id="quoteText"></p>
+</div>
+    
 <div class="container">
 
 <p class="intro">
@@ -393,5 +412,107 @@ function sendWhatsApp() {
 }
 </script>
 
+    <script>
+const quotes = [
+    "Success is not final, failure is not fatal: It is the courage to continue that counts.",
+    "Push yourself, because no one else is going to do it for you.",
+    "Dream big. Start small. Act now.",
+    "Do something today that your future self will thank you for.",
+    "Great things never come from comfort zones.",
+    "Stay hungry. Stay foolish.",
+    "Discipline is the bridge between goals and accomplishment.",
+    "Believe you can and you're halfway there.",
+    "Small progress is still progress.",
+    "Your only limit is your mind.",
+    "Hard work beats talent when talent doesn’t work hard.",
+    "Consistency is more important than intensity.",
+    "Focus on the goal, not the obstacle.",
+    "Success starts with self-belief.",
+    "Make it happen. Shock everyone."
+    "In the shadow of the crown, even the king’s dog is king among dogs."
+        /* HEROIC & COURAGE */
+"Heroes are made by the paths they choose, not the powers they have.",
+"Courage is not the absence of fear, but the decision that something else is more important.",
+"A true warrior fights not because he hates what is in front of him, but because he loves what is behind him.",
+"Greatness is born when sacrifice meets purpose.",
+"The strongest people are not those who show strength in front of us, but those who win battles we know nothing about.",
+"Stand up even when you are the only one standing.",
+"A hero is someone who chooses discipline over comfort.",
+"Pain is temporary, but honor lasts forever.",
+"Bravery is choosing to act when fear is loud.",
+"Real strength is staying kind in a cruel world.",
+
+/* LOVE */
+"Love is not about possession, it is about appreciation.",
+"True love is built on loyalty, respect, and sacrifice.",
+"Love deeply, even if it makes you vulnerable.",
+"A heart that loves is always strong.",
+"Real love is choosing the same person every day.",
+"Love is proven through actions, not promises.",
+"The greatest gift you can give someone is your time.",
+"In a world full of temporary things, be someone's forever.",
+"Love grows when ego dies.",
+"A peaceful heart is born from genuine love.",
+
+/* SACRIFICE */
+"Success demands sacrifice; comfort demands regret.",
+"Behind every achievement is a season of sacrifice.",
+"If you want something you’ve never had, you must do something you’ve never done.",
+"Sacrifice today for a better tomorrow.",
+"Nothing valuable comes without a price.",
+"Dreams require discipline, not excuses.",
+"Temporary pain creates permanent strength.",
+"Your future depends on what you sacrifice today.",
+"Champions train while others complain.",
+"Great victories come from silent struggles.",
+
+/* GOD & FAITH */
+"With God, all things are possible.",
+"Pray about everything. Worry about nothing.",
+"When you trust God, fear loses its power.",
+"God's timing is perfect, even when we don't understand it.",
+"Faith makes things possible, not easy.",
+"God never wastes your pain.",
+"Let your faith be bigger than your fear.",
+"God is working behind the scenes for you.",
+"When you feel weak, remember who fights for you.",
+"Trust God even when the path is unclear.",
+
+/* REAL LIFE & MINDSET */
+"Life is hard, but so are you.",
+"Your mindset determines your reality.",
+"Stop waiting for motivation. Start building discipline.",
+"Nobody is coming to save you. Build yourself.",
+"The grind you avoid today becomes the regret of tomorrow.",
+"Be real. Stay loyal. Move silent.",
+"Success loves preparation.",
+"Excuses make today easy but tomorrow hard.",
+"Stay humble. Work hard. Stay focused.",
+"You either suffer the pain of discipline or the pain of regret.",
+
+/* POWERFUL & DEEP */
+"Silence is powerful when words are useless.",
+"Move in silence. Let results make the noise.",
+"Protect your peace at all costs.",
+"The strongest souls have the deepest scars.",
+"Sometimes losing is how you win.",
+"Respect is earned, not demanded.",
+"Energy never lies.",
+"Your circle should inspire you, not drain you.",
+"Growth begins at the end of your comfort zone.",
+"Your life changes the moment you decide to take control."
+
+];
+
+// Function to get random quote
+function showRandomQuote() {
+    const randomIndex = Math.floor(Math.random() * quotes.length);
+    document.getElementById("quoteText").innerText = quotes[randomIndex];
+}
+
+// Run when page loads
+window.onload = showRandomQuote;
+</script>
+    
 </body>
 </html>
