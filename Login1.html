@@ -72,13 +72,26 @@
         </section>
      
         <!-- Firebase SDKs for plain HTML/JS -->
-<script src="https://www.gstatic.com/firebasejs/9.30.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.30.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.30.0/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.30.0/firebase-analytics-compat.js"></script>
+<script type="module">
+  // Firebase Modular SDK v10+
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+  import { 
+    getAuth, 
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword,
+    updateProfile,
+    onAuthStateChanged
+  } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+  import { 
+    getFirestore, 
+    doc, 
+    setDoc,
+    getDocs,
+    collection,
+    query,
+    where
+  } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 
-<script>
-  // Your Firebase Config
   const firebaseConfig = {
     apiKey: "AIzaSyBqSxgQCsUFgIz7eetzb2MMbO_DkHN2Zu8",
     authDomain: "my-portifolio-3f4c5.firebaseapp.com",
@@ -89,53 +102,84 @@
     measurementId: "G-MLBNWNV99Y"
   };
 
-  // Initialize Firebase
-  firebase.initializeApp(firebaseConfig);
-  const auth = firebase.auth();
-  const db = firebase.firestore();
-  const analytics = firebase.analytics();
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  // Fanya global ili script zako zingine ziweze kutumia
+  window.auth = auth;
+  window.db = db;
+  window.createUserWithEmailAndPassword = createUserWithEmailAndPassword;
+  window.signInWithEmailAndPassword = signInWithEmailAndPassword;
+  window.updateProfile = updateProfile;
+  window.onAuthStateChanged = onAuthStateChanged;
+  window.doc = doc;
+  window.setDoc = setDoc;
+  window.getDocs = getDocs;
+  window.collection = collection;
+  window.query = query;
+  window.where = where;
 </script>
 
 
 <script>
-    const loginForm = document.getElementById('login-form');
+  const loginForm = document.getElementById('login-form');
 
-loginForm.addEventListener('submit', async (e) => {
-  e.preventDefault();
+  loginForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
 
-  const loginInput = document.getElementById('name').value;
-  const password = document.getElementById('password').value;
+    const loginInput = document.getElementById('name').value.trim();
+    const password = document.getElementById('password').value;
 
-  let emailToUse = "";
+    // Kwa sasa tutumia loginInput kama email (unaweza kubadilisha baadaye)
+    const email = loginInput; // If user enters username/phone, we'll improve later
 
-  try {
-    // Get all users from Firestore
-    const snapshot = await db.collection('users').get();
+    try {
+      // Sign in with Firebase Auth
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
 
-    snapshot.forEach(doc => {
-      const data = doc.data();
-      // Check if input matches username OR phone OR email
-      if (data.username === loginInput || data.phone === loginInput || data.email === loginInput) {
-        emailToUse = data.email;
-      }
-    });
+      alert("Login successful! Welcome back, " + (user.displayName || user.email));
+      window.location.href = "form222.html"; // au dashboard yako
 
-    if (emailToUse === "") {
-      alert("User not found!");
-      return;
+    } catch (err) {
+      console.error(err);
+      let msg = "Login failed.";
+      if (err.code === 'auth/wrong-password') msg = "Password is incorrect.";
+      if (err.code === 'auth/user-not-found') msg = "No account with this email.";
+      if (err.code === 'auth/invalid-email') msg = "Invalid email format.";
+      alert(msg);
     }
-
-    // Login with Firebase Auth
-    await auth.signInWithEmailAndPassword(emailToUse, password);
-    alert("Login successful!");
-    window.location = "dashboard.html"; // redirect to dashboard
-
+  });
+    // Ndani ya submit handler, kabla ya signInWithEmailAndPassword
+if (!loginInput.includes('@')) { // not email → search by username or phone
+  try {
+    const q = query(collection(db, "users"), where("username", "==", loginInput));
+    const snapshot = await getDocs(q);
+    if (snapshot.empty) {
+      // Try phone
+      const qPhone = query(collection(db, "users"), where("telphone", "==", loginInput));
+      const snapPhone = await getDocs(qPhone);
+      if (snapPhone.empty) {
+        alert("User not found!");
+        return;
+      }
+      snapPhone.forEach(doc => {
+        email = doc.data().email;
+      });
+    } else {
+      snapshot.forEach(doc => {
+        email = doc.data().email;
+      });
+    }
   } catch (err) {
-    alert(err.message);
+    alert("Error searching user: " + err.message);
+    return;
   }
-});
-
+}
 </script>
 
 </body>
+
 </html>
+
