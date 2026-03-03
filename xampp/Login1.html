@@ -103,6 +103,8 @@
   const auth = getAuth(app);
   const db = getFirestore(app);
 
+  console.log("Firebase initialized successfully");
+
   const loginForm = document.getElementById('login-form');
 
   loginForm.addEventListener('submit', async (e) => {
@@ -110,75 +112,109 @@
 
     const loginInput = document.getElementById('name').value.trim();
     const password = document.getElementById('password').value;
+
+    console.log("=== Login Attempt Started ===");
+    console.log("Input:", loginInput);
+    console.log("Password length:", password.length);
+
     let emailToUse = "";
 
-    console.log("Login attempt with input:", loginInput);
-
     try {
-      // Step 1: Find real email from username / phone / email
+      // Step 1: Find real email
       if (loginInput.includes('@') && loginInput.includes('.')) {
-        // Direct email
         emailToUse = loginInput;
         console.log("Using direct email:", emailToUse);
       } else {
-        // Try username first
+        console.log("Searching Firestore for username or phone:", loginInput);
+
+        // Try username
         let q = query(collection(db, "users"), where("username", "==", loginInput));
         let snapshot = await getDocs(q);
 
         if (snapshot.empty) {
-          // Try phone number
+          console.log("No username match → trying phone");
           q = query(collection(db, "users"), where("telphone", "==", loginInput));
           snapshot = await getDocs(q);
         }
 
         if (snapshot.empty) {
-          alert("User not found. Check username, email or phone number.");
-          console.log("No matching user found for:", loginInput);
+          console.log("No match found in Firestore");
+          alert("User not found. Please check username, email or phone number.");
           return;
         }
 
-        // Take the email from the first matching document
         snapshot.forEach((docSnap) => {
           emailToUse = docSnap.data().email;
-          console.log("Found email from Firestore:", emailToUse);
+          console.log("Found email:", emailToUse, "from doc:", docSnap.id);
         });
       }
 
       if (!emailToUse) {
-        alert("Could not find email for this login input.");
+        console.log("No email could be determined");
+        alert("Could not find email for this input.");
         return;
       }
 
-      // Step 2: Sign in with Firebase Auth
+      // Step 2: Attempt sign-in
+      console.log("Attempting sign-in with:", emailToUse);
       const userCredential = await signInWithEmailAndPassword(auth, emailToUse, password);
       const user = userCredential.user;
 
-      console.log("Login success! User UID:", user.uid);
+      console.log("LOGIN SUCCESS! UID:", user.uid);
+      console.log("Email verified:", user.emailVerified);
 
-      // Step 3: Check if profile setup is already complete
+      // Step 3: Check profile setup
+      console.log("Checking Firestore for user profile...");
       const userDocRef = doc(db, "users", user.uid);
       const userDoc = await getDoc(userDocRef);
 
-      if (userDoc.exists() && userDoc.data().setupComplete === true) {
-        // Already set up → go directly to dashboard
-        console.log("Profile already complete → skipping form222");
-        alert("Welcome back!");
-        window.location.href = "dashboard.html";
+      if (userDoc.exists()) {
+        const data = userDoc.data();
+        console.log("Firestore data:", data);
+        console.log("setupComplete value:", data.setupComplete);
+
+        if (data.setupComplete === true) {
+          console.log("Profile COMPLETE → going to dashboard");
+          alert("Welcome back!");
+          window.location.href = "dashboard.html";
+        } else {
+          console.log("Profile NOT complete → going to form222");
+          alert("Please complete your profile setup first.");
+          window.location.href = "form222.html";
+        }
       } else {
-        // Needs setup → go to form222
-        console.log("Profile not complete → redirecting to form222");
-        alert("Please complete your profile setup first.");
+        console.log("No Firestore document found for this UID");
+        alert("Profile not found. Please complete setup.");
         window.location.href = "form222.html";
       }
 
     } catch (err) {
-      console.error("Login error:", err.code, err.message);
-
+      console.error("LOGIN ERROR:", err.code, err.message);
       let msg = "Login failed. Please try again.";
-      if (err.code === 'auth/wrong-password') msg = "Incorrect password.";
-      if (err.code === 'auth/user-not-found' || err.code === 'auth/invalid-email') msg = "No account found with this email.";
-      if (err.code === 'auth/too-many-requests') msg = "Too many attempts. Try again later.";
+
+      switch (err.code) {
+        case 'auth/wrong-password':
+          msg = "Incorrect password.";
+          break;
+        case 'auth/user-not-found':
+        case 'auth/invalid-email':
+          msg = "No account found with this email.";
+          break;
+        case 'auth/invalid-credential':
+          msg = "Invalid login credentials.";
+          break;
+        case 'auth/too-many-requests':
+          msg = "Too many failed attempts. Try again later or reset password.";
+          break;
+        case 'auth/network-request-failed':
+          msg = "Network error. Check your internet connection.";
+          break;
+        default:
+          msg = "Login failed: " + (err.message || "Unknown error");
+      }
+
       alert(msg);
+      console.error("Full error object:", err);
     }
   });
 </script>
