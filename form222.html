@@ -114,6 +114,22 @@ button:hover{background:#1f3cd0;}
   let photoData = "";
   let currentUser = null;
 
+onAuthStateChanged(auth, async (user) => {
+  if (user) {
+    currentUser = user;
+
+    // Check if already completed setup
+    const userDoc = await getDoc(doc(db, "users", user.uid));
+    if (userDoc.exists() && userDoc.data().setupComplete === true) {
+      // Already done → skip to dashboard
+      window.location.href = "dashboard.html";
+    }
+  } else {
+    // Not logged in → back to login
+    window.location.href = "Login1.html";
+  }
+});
+    
   // Monitor Auth State (Ensure user is logged in)
   onAuthStateChanged(auth, (user) => {
     if (user) {
@@ -173,4 +189,5 @@ button:hover{background:#1f3cd0;}
 
 </body>
 </html>
+
 
