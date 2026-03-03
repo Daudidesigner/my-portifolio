@@ -439,7 +439,7 @@ body {
 <script>
     auth.onAuthStateChanged((user) => {
   if (!user) {
-    window.location = "login.html";
+    window.location = "Login1.html";
   }
 });
 
@@ -565,7 +565,7 @@ function removePhoto(){
 }
 
 // LOGOUT
-function logout(){ alert("Logging out..."); }
+
 
 // TEAM MEMBERS
 let team=JSON.parse(localStorage.getItem("creativeHubTeam")||"[]");
