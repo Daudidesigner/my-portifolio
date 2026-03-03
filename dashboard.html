@@ -435,14 +435,6 @@ body {
   const db = getFirestore(app);
 </script>
 
-<script>
-    auth.onAuthStateChanged((user) => {
-  if (!user) {
-    window.location = "login.html";
-  }
-});
-
-</script>
 
 <script>
 
@@ -649,7 +641,7 @@ function deleteFile(i){ files.splice(i,1); localStorage.setItem("creativeHubFile
 renderFiles();
 
     // ===== REAL LOGOUT =====
-  function logout() {
+window.logout = function() {
     signOut(auth)
       .then(() => {
         console.log("User signed out");
@@ -668,4 +660,5 @@ renderFiles();
 </body>
 
 </html>
+
 
