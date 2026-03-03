@@ -1,186 +1,168 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <title>Login page</title>
-        <meta charset="UTF-8">
-        <link rel="icon" href="1ct3.jpg" type="image/x-icon">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    </head>
-    <style>
-        body{
-            text-align: center;
-            padding: 50px;
-            justify-items: center;
-            font-family:Arial, Helvetica, sans-serif;
-            background-image: url('backc4.jpg');
-            background-size: cover;
-            background-repeat: no-repeat;
-            background-position: top;
-            min-height: 100vh;
-        }
-        section{
-            background-color: #ccc;
-            padding:60.5px;
-            border-radius: 50px;
-        }
-        div{
-            background-color: #ddd;
-            padding: 24.6px;
-            border-radius: 40px;
-        }
-        input{
-            border-radius: 10px;
-            border: none;
-            padding:10px;
-        }
-        #login{
-            background-color: blue;
-            color:white;
-            cursor:pointer;
-        }
-        #login:hover{
-            background-color: rgb(135, 135, 173);
-            color:red;
-        }
-           @media (max-width: 500px) {
-            section {
-                padding: 1.5rem;
-            }
-            div {
-                padding: 1rem;
-            }
-            #login {
-                font-size: 0.9rem;
-                padding: 0.7rem;
-            }
-        }
-    </style>
-    <body>
-        <section>
-            <h2>Welcome Again</h2>
-    <div>
-        <form action="form222.html" id="login-form">
-            <label for="name">Username</label><br>
-            <input type="text" id="name" name="name" placeholder="name/email/phone-number" required><br><br>
-            <label for="password">Password</label><br>
-            <input type="password" id="password" name="password" minlength="8" maxlength="32" required><br><br>
-            <input type="submit" id="login" value="Login">
-        </form>
-    </div>
-    <p><a href="forget password.html">Forget Password?</a></p>
-    <p>You don't have Account <a href="Sign up page.html">Sign up</a> </p>
-        </section>
-     
-        <!-- Firebase SDKs for plain HTML/JS -->
-<script type="module">
-  // Firebase Modular SDK v10+
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
-  import { 
-    getAuth, 
-    createUserWithEmailAndPassword,
-    signInWithEmailAndPassword,
-    updateProfile,
-    onAuthStateChanged
-  } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
-  import { 
-    getFirestore, 
-    doc, 
-    setDoc,
-    getDocs,
-    collection,
-    query,
-    where
-  } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyBqSxgQCsUFgIz7eetzb2MMbO_DkHN2Zu8",
-    authDomain: "my-portifolio-3f4c5.firebaseapp.com",
-    projectId: "my-portifolio-3f4c5",
-    storageBucket: "my-portifolio-3f4c5.firebasestorage.app",
-    messagingSenderId: "1036053397124",
-    appId: "1:1036053397124:web:3bdfea641c319d176a0cd1",
-    measurementId: "G-MLBNWNV99Y"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
-
-  // Fanya global ili script zako zingine ziweze kutumia
-  window.auth = auth;
-  window.db = db;
-  window.createUserWithEmailAndPassword = createUserWithEmailAndPassword;
-  window.signInWithEmailAndPassword = signInWithEmailAndPassword;
-  window.updateProfile = updateProfile;
-  window.onAuthStateChanged = onAuthStateChanged;
-  window.doc = doc;
-  window.setDoc = setDoc;
-  window.getDocs = getDocs;
-  window.collection = collection;
-  window.query = query;
-  window.where = where;
-</script>
-
-
-<script>
-  const loginForm = document.getElementById('login-form');
-
-  loginForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-
-    const loginInput = document.getElementById('name').value.trim();
-    const password = document.getElementById('password').value;
-
-    // Kwa sasa tutumia loginInput kama email (unaweza kubadilisha baadaye)
-    const email = loginInput; // If user enters username/phone, we'll improve later
-
-    try {
-      // Sign in with Firebase Auth
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user;
-
-      alert("Login successful! Welcome back, " + (user.displayName || user.email));
-      window.location.href = "form222.html"; // au dashboard yako
-
-    } catch (err) {
-      console.error(err);
-      let msg = "Login failed.";
-      if (err.code === 'auth/wrong-password') msg = "Password is incorrect.";
-      if (err.code === 'auth/user-not-found') msg = "No account with this email.";
-      if (err.code === 'auth/invalid-email') msg = "Invalid email format.";
-      alert(msg);
+<head>
+    <title>Login page</title>
+    <meta charset="UTF-8">
+    <link rel="icon" href="1ct3.jpg" type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<style>
+    body {
+        text-align: center;
+        padding: 50px;
+        justify-items: center;
+        font-family: Arial, Helvetica, sans-serif;
+        background-image: url('backc4.jpg');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: top;
+        min-height: 100vh;
     }
-  });
-    // Ndani ya submit handler, kabla ya signInWithEmailAndPassword
-if (!loginInput.includes('@')) { // not email → search by username or phone
-  try {
-    const q = query(collection(db, "users"), where("username", "==", loginInput));
-    const snapshot = await getDocs(q);
-    if (snapshot.empty) {
-      // Try phone
-      const qPhone = query(collection(db, "users"), where("telphone", "==", loginInput));
-      const snapPhone = await getDocs(qPhone);
-      if (snapPhone.empty) {
-        alert("User not found!");
-        return;
-      }
-      snapPhone.forEach(doc => {
-        email = doc.data().email;
-      });
-    } else {
-      snapshot.forEach(doc => {
-        email = doc.data().email;
-      });
+    section {
+        background-color: #ccc;
+        padding: 60.5px;
+        border-radius: 50px;
     }
-  } catch (err) {
-    alert("Error searching user: " + err.message);
-    return;
-  }
-}
-</script>
+    div {
+        background-color: #ddd;
+        padding: 24.6px;
+        border-radius: 40px;
+    }
+    input {
+        border-radius: 10px;
+        border: none;
+        padding: 10px;
+    }
+    #login {
+        background-color: blue;
+        color: white;
+        cursor: pointer;
+    }
+    #login:hover {
+        background-color: rgb(135, 135, 173);
+        color: red;
+    }
+    @media (max-width: 500px) {
+        section { padding: 1.5rem; }
+        div { padding: 1rem; }
+        #login { font-size: 0.9rem; padding: 0.7rem; }
+    }
+</style>
+<body>
+    <section>
+        <h2>Welcome Again</h2>
+        <div>
+            <form id="login-form">
+                <label for="name">Username / Email / Phone</label><br>
+                <input type="text" id="name" name="name" placeholder="name/email/phone-number" required><br><br>
+                <label for="password">Password</label><br>
+                <input type="password" id="password" name="password" minlength="8" maxlength="32" required><br><br>
+                <input type="submit" id="login" value="Login">
+            </form>
+        </div>
+        <p><a href="forget password.html">Forget Password?</a></p>
+        <p>You don't have Account <a href="Sign up page.html">Sign up</a></p>
+    </section>
 
+    <!-- Firebase Modular SDK -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+        import {
+            getAuth,
+            signInWithEmailAndPassword,
+            onAuthStateChanged
+        } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+        import {
+            getFirestore,
+            doc,
+            getDoc,
+            query,
+            collection,
+            where,
+            getDocs
+        } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBqSxgQCsUFgIz7eetzb2MMbO_DkHN2Zu8",
+            authDomain: "my-portifolio-3f4c5.firebaseapp.com",
+            projectId: "my-portifolio-3f4c5",
+            storageBucket: "my-portifolio-3f4c5.firebasestorage.app",
+            messagingSenderId: "1036053397124",
+            appId: "1:1036053397124:web:3bdfea641c319d176a0cd1",
+            measurementId: "G-MLBNWNV99Y"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        const loginForm = document.getElementById('login-form');
+
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const loginInput = document.getElementById('name').value.trim();
+            const password = document.getElementById('password').value;
+            let emailToUse = "";
+
+            try {
+                // Step 1: Determine email from username/phone/email input
+                if (loginInput.includes('@')) {
+                    // Direct email login
+                    emailToUse = loginInput;
+                } else {
+                    // Search by username
+                    let q = query(collection(db, "users"), where("username", "==", loginInput));
+                    let snapshot = await getDocs(q);
+
+                    if (snapshot.empty) {
+                        // Try phone
+                        q = query(collection(db, "users"), where("telphone", "==", loginInput));
+                        snapshot = await getDocs(q);
+                    }
+
+                    if (snapshot.empty) {
+                        alert("User not found! Please check your username/email/phone.");
+                        return;
+                    }
+
+                    // Get email from the matching user
+                    snapshot.forEach((docSnap) => {
+                        emailToUse = docSnap.data().email;
+                    });
+                }
+
+                if (!emailToUse) {
+                    alert("Could not find email for this username/phone.");
+                    return;
+                }
+
+                // Step 2: Sign in with email + password
+                const userCredential = await signInWithEmailAndPassword(auth, emailToUse, password);
+                const user = userCredential.user;
+
+                // Step 3: Check if profile setup is complete
+                const userDocRef = doc(db, "users", user.uid);
+                const userDoc = await getDoc(userDocRef);
+
+                if (userDoc.exists() && userDoc.data().setupComplete === true) {
+                    // Already completed setup → go directly to dashboard
+                    alert("Welcome back, " + (user.displayName || emailToUse) + "!");
+                    window.location.href = "dashboard.html";
+                } else {
+                    // Needs to set username/photo
+                    alert("Please complete your profile setup first.");
+                    window.location.href = "form222.html";
+                }
+
+            } catch (err) {
+                console.error("Login error:", err);
+                let msg = "Login failed.";
+                if (err.code === 'auth/wrong-password') msg = "Incorrect password.";
+                if (err.code === 'auth/user-not-found' || err.code === 'auth/invalid-email') msg = "No account found with this email.";
+                alert(msg);
+            }
+        });
+    </script>
 </body>
-
 </html>
-
-
