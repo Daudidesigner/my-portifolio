@@ -65,104 +65,116 @@
     </section>
 
     <!-- Firebase Modular SDK -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
-        import {
-            getAuth,
-            signInWithEmailAndPassword,
-            onAuthStateChanged
-        } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
-        import {
-            getFirestore,
-            doc,
-            getDoc,
-            query,
-            collection,
-            where,
-            getDocs
-        } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+ <script type="module">
+  // Firebase imports
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+  import {
+    getAuth,
+    signInWithEmailAndPassword
+  } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+  import {
+    getFirestore,
+    doc,
+    getDoc,
+    query,
+    collection,
+    where,
+    getDocs
+  } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyBqSxgQCsUFgIz7eetzb2MMbO_DkHN2Zu8",
-            authDomain: "my-portifolio-3f4c5.firebaseapp.com",
-            projectId: "my-portifolio-3f4c5",
-            storageBucket: "my-portifolio-3f4c5.firebasestorage.app",
-            messagingSenderId: "1036053397124",
-            appId: "1:1036053397124:web:3bdfea641c319d176a0cd1",
-            measurementId: "G-MLBNWNV99Y"
-        };
+  const firebaseConfig = {
+    apiKey: "AIzaSyBqSxgQCsUFgIz7eetzb2MMbO_DkHN2Zu8",
+    authDomain: "my-portifolio-3f4c5.firebaseapp.com",
+    projectId: "my-portifolio-3f4c5",
+    storageBucket: "my-portifolio-3f4c5.firebasestorage.app",
+    messagingSenderId: "1036053397124",
+    appId: "1:1036053397124:web:3bdfea641c319d176a0cd1",
+    measurementId: "G-MLBNWNV99Y"
+  };
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
 
-        const loginForm = document.getElementById('login-form');
+  const loginForm = document.getElementById('login-form');
 
-        loginForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
+  loginForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
 
-            const loginInput = document.getElementById('name').value.trim();
-            const password = document.getElementById('password').value;
-            let emailToUse = "";
+    const loginInput = document.getElementById('name').value.trim();
+    const password = document.getElementById('password').value;
+    let emailToUse = "";
 
-            try {
-                // Step 1: Determine email from username/phone/email input
-                if (loginInput.includes('@')) {
-                    // Direct email login
-                    emailToUse = loginInput;
-                } else {
-                    // Search by username
-                    let q = query(collection(db, "users"), where("username", "==", loginInput));
-                    let snapshot = await getDocs(q);
+    console.log("Login attempt with input:", loginInput);
 
-                    if (snapshot.empty) {
-                        // Try phone
-                        q = query(collection(db, "users"), where("telphone", "==", loginInput));
-                        snapshot = await getDocs(q);
-                    }
+    try {
+      // Step 1: Find real email from username / phone / email
+      if (loginInput.includes('@') && loginInput.includes('.')) {
+        // Direct email
+        emailToUse = loginInput;
+        console.log("Using direct email:", emailToUse);
+      } else {
+        // Try username first
+        let q = query(collection(db, "users"), where("username", "==", loginInput));
+        let snapshot = await getDocs(q);
 
-                    if (snapshot.empty) {
-                        alert("User not found! Please check your username/email/phone.");
-                        return;
-                    }
+        if (snapshot.empty) {
+          // Try phone number
+          q = query(collection(db, "users"), where("telphone", "==", loginInput));
+          snapshot = await getDocs(q);
+        }
 
-                    // Get email from the matching user
-                    snapshot.forEach((docSnap) => {
-                        emailToUse = docSnap.data().email;
-                    });
-                }
+        if (snapshot.empty) {
+          alert("User not found. Check username, email or phone number.");
+          console.log("No matching user found for:", loginInput);
+          return;
+        }
 
-                if (!emailToUse) {
-                    alert("Could not find email for this username/phone.");
-                    return;
-                }
-
-                // Step 2: Sign in with email + password
-                const userCredential = await signInWithEmailAndPassword(auth, emailToUse, password);
-                const user = userCredential.user;
-
-                // Step 3: Check if profile setup is complete
-                const userDocRef = doc(db, "users", user.uid);
-                const userDoc = await getDoc(userDocRef);
-
-                if (userDoc.exists() && userDoc.data().setupComplete === true) {
-                    // Already completed setup → go directly to dashboard
-                    alert("Welcome back, " + (user.displayName || emailToUse) + "!");
-                    window.location.href = "dashboard.html";
-                } else {
-                    // Needs to set username/photo
-                    alert("Please complete your profile setup first.");
-                    window.location.href = "form222.html";
-                }
-
-            } catch (err) {
-                console.error("Login error:", err);
-                let msg = "Login failed.";
-                if (err.code === 'auth/wrong-password') msg = "Incorrect password.";
-                if (err.code === 'auth/user-not-found' || err.code === 'auth/invalid-email') msg = "No account found with this email.";
-                alert(msg);
-            }
+        // Take the email from the first matching document
+        snapshot.forEach((docSnap) => {
+          emailToUse = docSnap.data().email;
+          console.log("Found email from Firestore:", emailToUse);
         });
-    </script>
+      }
+
+      if (!emailToUse) {
+        alert("Could not find email for this login input.");
+        return;
+      }
+
+      // Step 2: Sign in with Firebase Auth
+      const userCredential = await signInWithEmailAndPassword(auth, emailToUse, password);
+      const user = userCredential.user;
+
+      console.log("Login success! User UID:", user.uid);
+
+      // Step 3: Check if profile setup is already complete
+      const userDocRef = doc(db, "users", user.uid);
+      const userDoc = await getDoc(userDocRef);
+
+      if (userDoc.exists() && userDoc.data().setupComplete === true) {
+        // Already set up → go directly to dashboard
+        console.log("Profile already complete → skipping form222");
+        alert("Welcome back!");
+        window.location.href = "dashboard.html";
+      } else {
+        // Needs setup → go to form222
+        console.log("Profile not complete → redirecting to form222");
+        alert("Please complete your profile setup first.");
+        window.location.href = "form222.html";
+      }
+
+    } catch (err) {
+      console.error("Login error:", err.code, err.message);
+
+      let msg = "Login failed. Please try again.";
+      if (err.code === 'auth/wrong-password') msg = "Incorrect password.";
+      if (err.code === 'auth/user-not-found' || err.code === 'auth/invalid-email') msg = "No account found with this email.";
+      if (err.code === 'auth/too-many-requests') msg = "Too many attempts. Try again later.";
+      alert(msg);
+    }
+  });
+</script>
 </body>
 </html>
+
