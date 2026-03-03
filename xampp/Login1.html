@@ -172,6 +172,21 @@ if (!loginInput.includes('@')) { // not email → search by username or phone
         email = doc.data().email;
       });
     }
+
+      // IMPORTANT: Check if profile is already set up
+      const userDocRef = doc(db, "users", user.uid);
+      const userDoc = await getDoc(userDocRef);
+
+      if (userDoc.exists() && userDoc.data().setupComplete === true) {
+        // Already completed → go straight to dashboard
+        alert("Welcome back, " + (user.displayName || emailToUse) + "!");
+        window.location.href = "dashboard.html";
+      } else {
+        // Needs setup → go to form222
+        alert("Please complete your profile setup first.");
+        window.location.href = "form222.html";
+      }
+      
   } catch (err) {
     alert("Error searching user: " + err.message);
     return;
