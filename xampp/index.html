@@ -333,6 +333,12 @@ footer .footed small:hover {
     <div id="quoteBox" class="quote-box" style="position: sticky; top: 0; z-index: 999; margin: 0 auto 20px auto;">
     <p id="quoteText"></p>
 </div>
+
+<!-- Visible Visitor Counter -->
+<div style="text-align:center; margin: 10px auto 25px; font-size: 16px; color: #555;">
+    <strong>Total Visitors:</strong> 
+    <span id="visitorCount" style="color: #007bff; font-weight: bold; font-size: 18px;">0</span>
+</div>
     
 <div class="container">
 
@@ -585,8 +591,32 @@ window.onload = startAutoQuotes;
   });
 </script>
 
-</body>
-</html>
+    <!-- ==================== VISITOR COUNTER ==================== -->
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
+
+<script>
+  // Initialize Realtime Database
+  const db = firebase.database();
+  const visitorRef = db.ref("totalVisitors");
+
+  // Function to increment and display counter
+  function updateVisitorCount() {
+    visitorRef.transaction((currentCount) => {
+      return (currentCount || 0) + 1;
+    });
+  }
+
+  // Listen to changes and update the display
+  visitorRef.on("value", (snapshot) => {
+    const count = snapshot.val() || 0;
+    document.getElementById("visitorCount").textContent = count.toLocaleString();
+  });
+
+  // Run when page loads
+  window.addEventListener("load", updateVisitorCount);
+</script>
+
+
     
 </body>
 </html>
