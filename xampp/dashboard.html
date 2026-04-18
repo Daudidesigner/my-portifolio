@@ -468,7 +468,7 @@ body {
         if (data.profilePhoto) {
           profileImg.src = data.profilePhoto;
         } else {
-          profileImg.src = "https://i.pravatar.cc/100"; // fallback
+           profileImg.style.display = "none"; // fallback
         }
       } else {
         console.log("No profile data found in Firestore");
