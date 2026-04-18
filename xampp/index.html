@@ -509,8 +509,29 @@ function showRandomQuote() {
     document.getElementById("quoteText").innerText = quotes[randomIndex];
 }
 
-// Run when page loads
-window.onload = showRandomQuote;
+// Auto-change quote every 8 seconds
+let quoteInterval;
+
+function startAutoQuote() {
+    showRandomQuote();                    // Show first quote immediately
+    quoteInterval = setInterval(() => {
+        showRandomQuote();
+    }, 5000);   // Change every 5 seconds (you can change this number)
+}
+
+// Stop the auto-change when user hovers over the quote box
+const quoteBox = document.getElementById("quoteBox");
+
+quoteBox.addEventListener("mouseenter", () => {
+    clearInterval(quoteInterval);   // Pause when mouse is over
+});
+
+quoteBox.addEventListener("mouseleave", () => {
+    startAutoQuote();               // Resume when mouse leaves
+});
+
+// Start everything when page loads
+window.onload = startAutoQuote;
 </script>
     
 </body>
