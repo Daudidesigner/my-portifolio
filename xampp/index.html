@@ -326,7 +326,7 @@ footer .footed small:hover {
     </div>
 </header>
 
-    <div id="quoteBox" class="quote-box">
+    <div id="quoteBox" class="quote-box" style="position: sticky; top: 0; z-index: 999; margin: 0 auto 20px auto;">
     <p id="quoteText"></p>
 </div>
     
@@ -503,35 +503,60 @@ const quotes = [
 
 ];
 
-// Function to get random quote
-function showRandomQuote() {
-    const randomIndex = Math.floor(Math.random() * quotes.length);
-    document.getElementById("quoteText").innerText = quotes[randomIndex];
-}
-
-// Auto-change quote every 8 seconds
+let currentQuoteIndex = 0;
+let typingTimeout;
 let quoteInterval;
 
-function startAutoQuote() {
-    showRandomQuote();                    // Show first quote immediately
-    quoteInterval = setInterval(() => {
-        showRandomQuote();
-    }, 5000);   // Change every 5 seconds (you can change this number)
+// Function to type text word by word
+function typeWords(text, element, speed = 50) {
+    element.innerHTML = ""; 
+    const words = text.split(" ");
+    let i = 0;
+
+    function type() {
+        if (i < words.length) {
+            element.innerHTML += words[i] + " ";
+            i++;
+            typingTimeout = setTimeout(type, speed);
+        }
+    }
+    type();
 }
 
-// Stop the auto-change when user hovers over the quote box
+// Show next quote with typing effect
+function showNextQuote() {
+    clearTimeout(typingTimeout); // Clear any ongoing typing
+
+    const quoteElement = document.getElementById("quoteText");
+    const quote = quotes[currentQuoteIndex];
+
+    typeWords(quote, quoteElement, 40);   // 40ms per word (you can change)
+
+    // Move to next quote
+    currentQuoteIndex = (currentQuoteIndex + 1) % quotes.length;
+}
+
+// Start automatic changing
+function startAutoQuotes() {
+    showNextQuote();                    // Show first quote immediately
+    quoteInterval = setInterval(() => {
+        showNextQuote();
+    }, 4000);   // Change every 4 seconds
+}
+
+// Pause when hovering
 const quoteBox = document.getElementById("quoteBox");
 
 quoteBox.addEventListener("mouseenter", () => {
-    clearInterval(quoteInterval);   // Pause when mouse is over
+    clearInterval(quoteInterval);
 });
 
 quoteBox.addEventListener("mouseleave", () => {
-    startAutoQuote();               // Resume when mouse leaves
+    startAutoQuotes();
 });
 
-// Start everything when page loads
-window.onload = startAutoQuote;
+// Start when page loads
+window.onload = startAutoQuotes;
 </script>
     
 </body>
