@@ -298,6 +298,7 @@ footer .footed small:hover {
     font-size: 18px;
     text-align: center;
     border-radius: 8px;
+    color: #1f2937;
 }
 </style>
     
@@ -530,7 +531,7 @@ function showNextQuote() {
     const quoteElement = document.getElementById("quoteText");
     const quote = quotes[currentQuoteIndex];
 
-    typeWords(quote, quoteElement, 40);   // 40ms per word (you can change)
+    typeWords(quote, quoteElement, 80);   // 40ms per word (you can change)
 
     // Move to next quote
     currentQuoteIndex = (currentQuoteIndex + 1) % quotes.length;
