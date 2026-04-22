@@ -176,16 +176,16 @@
         if (data.setupComplete === true) {
           console.log("Profile COMPLETE → going to dashboard");
           alert("Welcome back!");
-          window.location.href = "_dashboard.html";
+          window.location.href = "dashboard.html";
         } else {
           console.log("Profile NOT complete → going to form222");
           alert("Please complete your profile setup first.");
-          window.location.href = "_form222.html";
+          window.location.href = "form222.html";
         }
       } else {
         console.log("No Firestore document found for this UID");
         alert("Profile not found. Please complete setup.");
-        window.location.href = "_form222.html";
+        window.location.href = "form222.html";
       }
 
     } catch (err) {
